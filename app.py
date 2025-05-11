@@ -23,11 +23,11 @@ except ImportError:
 init_db()
 
 # Konfiguracja loggera
+logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
 def log_event(msg):
     logging.info(msg)
     if st.session_state.get('debug_mode', False):
         st.write(f"[LOG] {msg}")
-logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
 
 # Ustawienia strony
 st.set_page_config(
@@ -43,23 +43,243 @@ def local_css(file_name):
 
 local_css("custom_theme.css")
 
-# --- 2. Przełącznik motywu (Material Design) ---
+# --- 2. Implementacja funkcji render_dashboard ---
+def render_dashboard():
+    st.title("Dashboard")
+    st.markdown("### Szybkie podsumowanie")
+    
+    # Przykładowe karty metryczne
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown("""
+        <div class="card metric">
+            <i class="material-icons">inventory_2</i>
+            <div>
+                <div>Produkty w zapasie</div>
+                <h2>34</h2>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="card metric">
+            <i class="material-icons">watch_later</i>
+            <div>
+                <div>Produkty przeterminowane</div>
+                <h2>3</h2>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+        <div class="card metric">
+            <i class="material-icons">payments</i>
+            <div>
+                <div>Wydatki w tym miesiącu</div>
+                <h2>432 zł</h2>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Alerty
+    st.markdown("""
+    <div class="alert warning">
+        <i class="material-icons">warning</i>
+        <div>3 produkty niedługo się przeterminują</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# --- 3. Funkcja do dodawania paragonu ---
+def render_add_receipt():
+    st.title("Dodaj paragon (OCR)")
+    
+    # Formularz dodawania paragonu
+    with st.form("upload_form"):
+        uploaded_file = st.file_uploader("Wybierz plik (JPG, PNG, PDF)", type=['jpg', 'jpeg', 'png', 'pdf'])
+        sklep = st.selectbox("Wybierz sklep", ["Biedronka", "Lidl", "Kaufland", "Auchan", "Inny"])
+        submit_button = st.form_submit_button("Przetwórz OCR")
+    
+    if submit_button and uploaded_file:
+        try:
+            # Zapisz plik tymczasowo
+            with tempfile.NamedTemporaryFile(delete=False, suffix=f".{uploaded_file.name.split('.')[-1]}") as tmp_file:
+                tmp_file.write(uploaded_file.getvalue())
+                file_path = tmp_file.name
+            
+            # Wykonaj OCR na pliku
+            try:
+                tekst_ocr = ocr_file(file_path)
+                # Skróć tekst dla wyświetlenia
+                tekst_display = tekst_ocr[:300] + "..." if len(tekst_ocr) > 300 else tekst_ocr
+                
+                # Zapisz paragon do oczekujących
+                add_pending_receipt(uploaded_file.name, file_path, sklep, tekst_ocr)
+                
+                # Wyświetl podgląd i informację o sukcesie
+                st.success(f"Plik został wgrany i przetworzony przez OCR. Przejdź do sekcji 'Paragony oczekujące' aby dokończyć proces.")
+                
+                # Podgląd pliku
+                if uploaded_file.name.lower().endswith(('jpg', 'jpeg', 'png')):
+                    image = Image.open(file_path)
+                    st.image(image, caption=f"Podgląd: {uploaded_file.name}", width=400)
+                elif uploaded_file.name.lower().endswith('pdf') and convert_from_path:
+                    images = convert_from_path(file_path, first_page=1, last_page=1)
+                    if images:
+                        st.image(images[0], caption=f"Podgląd pierwszej strony: {uploaded_file.name}", width=400)
+                
+                # Podgląd tekstu OCR
+                st.subheader("Rozpoznany tekst:")
+                st.text_area("", value=tekst_display, height=200, disabled=True)
+                
+                log_event(f"Plik wgrany: {uploaded_file.name}")
+                log_event(f"OCR OK dla pliku {uploaded_file.name}. Tekst: {tekst_ocr[:100]}...")
+                
+            except Exception as e:
+                st.error(f"Błąd OCR: {str(e)}")
+                log_event(f"Błąd OCR: {str(e)}")
+                # Usuń plik tymczasowy
+                try:
+                    os.unlink(file_path)
+                except:
+                    pass
+        except Exception as e:
+            st.error(f"Błąd podczas przetwarzania pliku: {str(e)}")
+            log_event(f"Błąd podczas przetwarzania pliku: {str(e)}")
+
+# --- 4. Funkcja do przeglądania oczekujących paragonów ---
+def render_pending_receipts():
+    st.title("Paragony oczekujące na przetworzenie")
+    
+    # Pobierz paragony oczekujące
+    receipts = get_pending_receipts()
+    
+    if not receipts:
+        st.info("Brak paragonów oczekujących na przetworzenie.")
+        return
+    
+    # Wyświetl listę paragonów
+    for receipt in receipts:
+        receipt_id, nazwa_pliku, sciezka, sklep, tekst_ocr, data_dodania = receipt
+        
+        st.markdown(f"""
+        <div class="card">
+            <h3>{nazwa_pliku}</h3>
+            <p>Sklep: {sklep}</p>
+            <p>Data dodania: {data_dodania}</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Formularz do przetworzenia paragonu
+        with st.expander(f"Przetwórz paragon #{receipt_id}"):
+            # Podgląd pliku
+            if os.path.exists(sciezka):
+                if sciezka.lower().endswith(('jpg', 'jpeg', 'png')):
+                    image = Image.open(sciezka)
+                    st.image(image, caption=f"Podgląd: {nazwa_pliku}", width=400)
+                elif sciezka.lower().endswith('pdf') and convert_from_path:
+                    try:
+                        images = convert_from_path(sciezka, first_page=1, last_page=1)
+                        if images:
+                            st.image(images[0], caption=f"Podgląd pierwszej strony: {nazwa_pliku}", width=400)
+                    except Exception as e:
+                        st.error(f"Błąd podglądu PDF: {str(e)}")
+            
+            # Edycja tekstu OCR
+            edited_ocr = st.text_area(f"Edytuj tekst OCR", value=tekst_ocr, height=200)
+            
+            # Przyciski akcji
+            if st.button("Analizuj LLM", key=f"analyze_{receipt_id}"):
+                try:
+                    st.info("Wysyłanie do analizy... To może potrwać chwilę.")
+                    log_event(f"Prompt do LLM (sklep: {sklep}): {edited_ocr[:100]}...")
+                    products = extract_products_from_receipt(edited_ocr, sklep)
+                    
+                    # Zapisz wyniki do session_state
+                    key = f"products_{receipt_id}"
+                    st.session_state[key] = products
+                    
+                    st.success(f"Analiza zakończona. Wykryto {len(products)} produktów.")
+                    
+                    # Wyświetl wyniki
+                    for i, prod in enumerate(products):
+                        with st.expander(f"Produkt #{i+1}: {prod.get('nazwa_znormalizowana', 'Brak nazwy')}"):
+                            # Konwertuj dict na JSON, a następnie z powrotem aby zapewnić edytowalność
+                            prod_json = json.dumps(prod, indent=2)
+                            edited_prod_json = st.text_area(f"Edytuj dane produktu", value=prod_json, height=300, key=f"prod_{receipt_id}_{i}")
+                            
+                            try:
+                                # Aktualizuj produkt w session_state
+                                edited_prod = json.loads(edited_prod_json)
+                                st.session_state[key][i] = edited_prod
+                            except json.JSONDecodeError as e:
+                                st.error(f"Błąd formatu JSON: {str(e)}")
+                    
+                    # Przycisk do zapisania wszystkich produktów
+                    if st.button("Zapisz wszystkie produkty do bazy", key=f"save_all_{receipt_id}"):
+                        for prod in st.session_state[key]:
+                            try:
+                                add_product(prod)
+                                st.success(f"Dodano produkt: {prod.get('nazwa_znormalizowana', 'Brak nazwy')}")
+                            except Exception as e:
+                                st.error(f"Błąd dodawania produktu: {str(e)}")
+                        
+                        # Usuń paragon z oczekujących
+                        delete_pending_receipt(receipt_id)
+                        st.success("Wszystkie produkty zostały zapisane. Paragon został usunięty z oczekujących.")
+                        st.experimental_rerun()
+                
+                except Exception as e:
+                    st.error(f"Błąd analizy LLM: {str(e)}")
+                    log_event(f"Błąd LLM: {str(e)}")
+            
+            # Przycisk do usunięcia paragonu
+            if st.button("Usuń paragon", key=f"delete_{receipt_id}"):
+                try:
+                    delete_pending_receipt(receipt_id)
+                    # Spróbuj usunąć plik tymczasowy
+                    try:
+                        if os.path.exists(sciezka):
+                            os.unlink(sciezka)
+                    except:
+                        pass
+                    st.success("Paragon został usunięty.")
+                    st.experimental_rerun()
+                except Exception as e:
+                    st.error(f"Błąd usuwania paragonu: {str(e)}")
+
+# --- 5. Inne funkcje dla pozostałych widoków ---
+def render_products_list():
+    st.title("Lista produktów")
+    st.info("Ten widok jest w trakcie implementacji.")
+
+def render_meal_planning():
+    st.title("Planowanie posiłków")
+    st.info("Ten widok jest w trakcie implementacji.")
+
+def render_analytics():
+    st.title("Analityka wydatków")
+    st.info("Ten widok jest w trakcie implementacji.")
+
+def render_shopping_list():
+    st.title("Lista zakupów")
+    st.info("Ten widok jest w trakcie implementacji.")
+
+def render_settings():
+    st.title("Ustawienia")
+    st.info("Ten widok jest w trakcie implementacji.")
+
+# --- 6. Material Design CSS i ikony ---
 st.markdown("""
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-<div class="theme-toggle" id="theme-toggle" onclick="document.body.classList.toggle('dark'); 
-     const icon = document.querySelector('#theme-toggle i');
-     icon.textContent = document.body.classList.contains('dark') ? 'light_mode' : 'dark_mode';">
-    <i class="material-icons">dark_mode</i>
-</div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.body.classList.add('dark');
-});
-</script>
 """, unsafe_allow_html=True)
 
-# --- 3. Definicja danych menu ---
+# --- 7. Przygotowanie menu ---
+st.sidebar.title("Menu")
+
+# Definiowanie opcji menu
 menu_data = [
     {"icon": "dashboard", "label": "Dashboard", "id": "dashboard"},
     {"icon": "receipt", "label": "Dodaj paragon (OCR)", "id": "add_receipt"},
@@ -71,23 +291,22 @@ menu_data = [
     {"icon": "settings", "label": "Ustawienia", "id": "settings"}
 ]
 
-# --- 4. Inicjalizacja session_state ---
+# --- 8. Inicjalizacja stanu aplikacji ---
 if 'page' not in st.session_state:
     st.session_state.page = "dashboard"
-if 'debug_mode' not in st.session_state:
-    st.session_state.debug_mode = False
 
-# --- 5. Funkcja do zmiany strony ---
+# --- 9. Funkcja zmiany strony ---
 def change_page(page_id):
     st.session_state.page = page_id
     st.experimental_rerun()
 
-# --- 6. Generowanie menu bocznego ---
-st.sidebar.markdown("<h3>Menu</h3>", unsafe_allow_html=True)
-
+# --- 10. Generowanie menu bocznego ---
 for item in menu_data:
+    # Określenie czy pozycja jest aktywna
     is_active = st.session_state.page == item["id"]
-    menu_item_class = "menu-item active" if is_active else "menu-item"
+    menu_item_class = "active" if is_active else ""
+    
+    # Tworzenie przycisku menu
     if st.sidebar.button(
         f"{item['label']}",
         key=f"menu_{item['id']}",
@@ -95,17 +314,12 @@ for item in menu_data:
         on_click=change_page,
         args=(item["id"],)
     ):
-        pass
-    st.sidebar.markdown(
-        f"""<div id="icon-{item['id']}" class="menu-icon" style="display:none">
-            <i class="material-icons">{item['icon']}</i>
-        </div>""", 
-        unsafe_allow_html=True
-    )
+        pass  # Przycisk automatycznie wywoła funkcję change_page
 
-# --- 7. CSS do zastąpienia przycisków Streamlit własnymi stylami ---
+# --- 11. CSS do stylizacji przycisków menu ---
 st.markdown("""
 <style>
+/* Ukrycie standardowych przycisków Streamlit w menu */
 .sidebar button {
     background: transparent !important;
     border: none !important;
@@ -115,12 +329,15 @@ st.markdown("""
     font-weight: normal !important;
     padding-left: 20px !important;
 }
+
+/* Dodanie ikon z Material Icons do przycisków */
 .sidebar button:before {
     font-family: 'Material Icons';
     margin-right: 10px;
     vertical-align: middle;
     color: var(--accent);
 }
+
 .sidebar button[key="menu_dashboard"]:before { content: "dashboard"; }
 .sidebar button[key="menu_add_receipt"]:before { content: "receipt"; }
 .sidebar button[key="menu_pending_receipts"]:before { content: "pending"; }
@@ -129,6 +346,8 @@ st.markdown("""
 .sidebar button[key="menu_analytics"]:before { content: "bar_chart"; }
 .sidebar button[key="menu_shopping_list"]:before { content: "shopping_cart"; }
 .sidebar button[key="menu_settings"]:before { content: "settings"; }
+
+/* Stylizacja aktywnego przycisku */
 .sidebar button[aria-pressed="true"] {
     background: rgba(255,214,0,0.18) !important;
     border-left: 4px solid var(--accent) !important;
@@ -137,11 +356,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- 8. Pomocnicze funkcje do obsługi widoków ---
-# ... (tu wklej całą sekcję render_* z propozycji użytkownika) ...
-# (ze względu na długość, kod render_* zostanie wklejony w całości w kolejnych krokach)
-
-# --- 9. Wyświetlanie odpowiedniej sekcji na podstawie session_state ---
+# --- 12. Wyświetlanie odpowiedniej sekcji na podstawie session_state ---
 if st.session_state.page == "dashboard":
     render_dashboard()
 elif st.session_state.page == "add_receipt":
