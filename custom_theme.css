@@ -1,0 +1,685 @@
+/* === Motyw Streamlit: tylko tryb ciemny, kontrastowy === */
+
+/*
+Alternatywna, bardziej kontrastowa paleta kolorów (propozycja):
+--primary:   #1976d2;   // mocny niebieski
+--accent:    #ffd600;   // intensywny żółty
+--danger:    #d32f2f;   // mocny czerwony
+--success:   #388e3c;   // mocny zielony
+--warning:   #ff9800;   // intensywny pomarańczowy
+--info:      #0288d1;   // niebieski info
+--bg-content: #121212;  // bardzo ciemne tło
+--bg-menu:   #23262b;
+--bg-card:   #ffffff;   // białe karty
+--bg-light:  #f5f7fa;
+--text-light: #f5f7fa;
+--text-dark: #181a1b;
+--card-radius: 18px;
+--card-shadow: 0 4px 24px rgba(0,0,0,0.13);
+--menu-radius: 16px;
+--menu-shadow: 0 4px 24px rgba(0,0,0,0.13);
+--border-light: #bdbdbd;
+
+Aby użyć tej palety, zamień wartości w :root powyżej.
+
+---
+
+Szybki mockup (opis wizualny):
+
+Wariant pastelowy (obecny):
+- Tło aplikacji: bardzo jasne szaro-białe
+- Sidebar: ciemny, z pastelowymi żółtymi akcentami
+- Karty: jasne, z delikatnym cieniem, pastelowe ikony
+- Metryki: gradient niebiesko-żółty, duże liczby
+- Alerty: jasne tła, pastelowe kolory tekstu i ikon
+- Przyciski: żółte, z ciemnym tekstem
+- Tryb ciemny: tło ciemnoszare, tekst jasny, akcenty pastelowe
+
+Wariant kontrastowy (propozycja):
+- Tło aplikacji: białe lub bardzo ciemne (w trybie ciemnym)
+- Sidebar: ciemny, aktywna pozycja intensywnie żółta
+- Karty: białe, z mocnym cieniem, ikony w żywych kolorach
+- Metryki: tło białe, liczby w mocnym niebieskim
+- Alerty: tła w intensywnych kolorach (np. czerwony, pomarańczowy)
+- Przyciski: żółte lub niebieskie, tekst biały
+- Tryb ciemny: tło #121212, tekst jasny, akcenty mocne
+
+*/
+
+:root {
+  --primary: #1976d2;      /* mocny niebieski */
+  --accent: #ffd600;        /* intensywny żółty */
+  --danger: #d32f2f;        /* mocny czerwony */
+  --success: #388e3c;       /* mocny zielony */
+  --warning: #ff9800;       /* intensywny pomarańczowy */
+  --info: #0288d1;          /* niebieski info */
+  --bg-content: #121212;    /* bardzo ciemne tło */
+  --bg-menu: #23262b;
+  --bg-card: #23262b;       /* ciemne karty */
+  --bg-light: #121212;      /* tło aplikacji = ciemne */
+  --text-light: #f5f7fa;    /* jasny tekst */
+  --text-dark: #f5f7fa;     /* jasny tekst wszędzie */
+  --card-radius: 18px;
+  --card-shadow: 0 4px 24px rgba(0,0,0,0.13);
+  --menu-radius: 16px;
+  --menu-shadow: 0 4px 24px rgba(0,0,0,0.13);
+  --border-light: #333;
+}
+
+body, .stApp {
+  background: var(--bg-light);
+  color: var(--text-light);
+  font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif;
+  font-size: 1.08rem;
+  letter-spacing: 0.01em;
+}
+
+/* Karty */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  padding: 24px 24px 20px 24px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border-light);
+  animation: fadeIn 0.5s;
+  color: var(--text-light);
+}
+
+.card.metric {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  background: #181a1b;
+  color: var(--accent);
+}
+
+.card .icon, .card .feather {
+  font-size: 2.4rem;
+  margin-right: 1rem;
+}
+
+/* Menu boczne */
+.stSidebar {
+  background: var(--bg-menu) !important;
+  color: var(--text-light) !important;
+  border-radius: var(--menu-radius);
+  box-shadow: var(--menu-shadow);
+  border: 1.5px solid var(--border-light);
+  padding: 12px 8px 12px 8px;
+  min-width: 220px;
+  transition: background 0.2s;
+  border-right: 1px solid rgba(0,0,0,0.1);
+}
+
+.stSidebar .active {
+  background: rgba(255,214,0,0.18);
+  color: var(--primary) !important;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 1.13rem;
+  border-left: 4px solid var(--accent);
+  box-shadow: 0 2px 8px rgba(255,214,0,0.13);
+  position: relative;
+  animation: borderSlide 0.4s;
+}
+
+.stSidebar .icon, .stSidebar .feather {
+  font-size: 2.1rem !important;
+  margin-right: 0.7rem;
+  vertical-align: middle;
+  display: inline-block;
+  min-width: 2.2rem;
+  text-align: center;
+  color: var(--accent);
+}
+
+.stSidebar label, .stSidebar span, .stSidebar div {
+  color: var(--text-light) !important;
+  font-size: 1.08rem;
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+
+.stSidebar .menu-item {
+  padding: 12px 8px 12px 8px;
+  border-radius: 10px;
+  margin-bottom: 4px;
+  transition: background 0.18s;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.stSidebar .menu-item:hover {
+  background: #181a1b;
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.13rem;
+  margin-bottom: 24px;
+  color: var(--primary);
+}
+
+.breadcrumbs .crumb {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.breadcrumbs .crumb.active {
+  font-weight: bold;
+  color: var(--accent);
+}
+
+/* Alerty */
+.alert {
+  border-radius: 12px;
+  padding: 16px 24px;
+  margin-bottom: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: fadeIn 0.7s;
+  font-size: 1.08rem;
+  color: var(--text-light);
+}
+.alert.info { background: #1e293b; color: var(--info); }
+.alert.success { background: #1b2e1b; color: var(--success); }
+.alert.warning { background: #332a00; color: var(--warning); }
+.alert.danger { background: #2d1619; color: var(--danger); }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Karty produktów */
+.product-card {
+  background: var(--bg-card);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  padding: 20px 18px 16px 18px;
+  margin-bottom: 14px;
+  border: 1px solid var(--border-light);
+  animation: fadeIn 0.5s;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: var(--text-light);
+}
+.product-card .icon, .product-card .feather {
+  font-size: 2.1rem;
+  margin-right: 1rem;
+}
+
+/* Kolory kategorii (przykład) */
+.product-card.nabial { border-left: 6px solid #1976d2; }
+.product-card.mieso { border-left: 6px solid #d32f2f; }
+.product-card.owoce { border-left: 6px solid #388e3c; }
+.product-card.suche { border-left: 6px solid #ffd600; }
+.product-card.napoje { border-left: 6px solid #0288d1; }
+.product-card.slodycze { border-left: 6px solid #a259ff; }
+.product-card.przyprawy { border-left: 6px solid #ff9800; }
+.product-card.inne { border-left: 6px solid #bdbdbd; }
+
+/* Nagłówki i typografia */
+h1, .stApp h1 {
+  font-size: 2.2rem !important;
+  line-height: 1.35 !important;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--primary) !important;
+  letter-spacing: 0.01em;
+}
+h2, .stApp h2 {
+  font-size: 1.5rem !important;
+  line-height: 1.3 !important;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--primary) !important;
+  letter-spacing: 0.01em;
+}
+
+/* CTA i akcenty */
+button, .stButton>button {
+  background: var(--accent) !important;
+  color: #222 !important;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-weight: 600;
+  font-size: 1.08rem;
+  margin: 8px 0;
+  box-shadow: 0 2px 8px rgba(255,214,0,0.10);
+  transition: background 0.18s;
+}
+button:hover, .stButton>button:hover {
+  background: #fff176 !important;
+}
+
+/* Responsywność */
+@media (max-width: 900px) {
+  .stSidebar {
+    min-width: 64px !important;
+    max-width: 64px !important;
+    padding: 12px 4px 12px 4px !important;
+  }
+  .stSidebar .menu-item span:not(.icon):not(.feather),
+  .stSidebar .menu-item label,
+  .stSidebar .menu-item .crumb {
+    display: none !important;
+  }
+  .stSidebar .icon, .stSidebar .feather {
+    margin-right: 0 !important;
+    font-size: 2.2rem !important;
+  }
+}
+@media (max-width: 600px) {
+  .card, .product-card { padding: 10px 4px; }
+  .breadcrumbs { font-size: 0.98rem; margin-bottom: 8px; }
+  .card.metric { flex-direction: column; align-items: flex-start; font-size: 1.1rem; }
+  .product-card { flex-direction: column; gap: 6px; }
+  button, .stButton>button { width: 100%; font-size: 1rem; }
+}
+
+/* Tooltipy dla ikon menu */
+.stSidebar .icon[title], .stSidebar .feather[title] {
+  position: relative;
+}
+.stSidebar .icon[title]:hover:after, .stSidebar .feather[title]:hover:after {
+  content: attr(title);
+  position: absolute;
+  left: 110%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #23262b;
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  font-size: 0.98rem;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  opacity: 0.95;
+}
+
+/* Komentarz: 
+- Motyw tylko ciemny, kontrastowy
+- Usunięto tryb jasny i jasne tła
+- Wszystkie teksty jasne, tła ciemne, akcenty mocne
+*/
+
+/* === Motyw Streamlit: nowoczesny, responsywny, jasny/ciemny === */
+
+/*
+Alternatywna, bardziej kontrastowa paleta kolorów (propozycja):
+--primary:   #1976d2;   // mocny niebieski
+--accent:    #ffd600;   // intensywny żółty
+--danger:    #d32f2f;   // mocny czerwony
+--success:   #388e3c;   // mocny zielony
+--warning:   #ff9800;   // intensywny pomarańczowy
+--info:      #0288d1;   // niebieski info
+--bg-content: #121212;  // bardzo ciemne tło
+--bg-menu:   #23262b;
+--bg-card:   #ffffff;   // białe karty
+--bg-light:  #f5f7fa;
+--text-light: #f5f7fa;
+--text-dark: #181a1b;
+--card-radius: 18px;
+--card-shadow: 0 4px 24px rgba(0,0,0,0.13);
+--menu-radius: 16px;
+--menu-shadow: 0 4px 24px rgba(0,0,0,0.13);
+--border-light: #bdbdbd;
+
+Aby użyć tej palety, zamień wartości w :root powyżej.
+
+---
+
+Szybki mockup (opis wizualny):
+
+Wariant pastelowy (obecny):
+- Tło aplikacji: bardzo jasne szaro-białe
+- Sidebar: ciemny, z pastelowymi żółtymi akcentami
+- Karty: jasne, z delikatnym cieniem, pastelowe ikony
+- Metryki: gradient niebiesko-żółty, duże liczby
+- Alerty: jasne tła, pastelowe kolory tekstu i ikon
+- Przyciski: żółte, z ciemnym tekstem
+- Tryb ciemny: tło ciemnoszare, tekst jasny, akcenty pastelowe
+
+Wariant kontrastowy (propozycja):
+- Tło aplikacji: białe lub bardzo ciemne (w trybie ciemnym)
+- Sidebar: ciemny, aktywna pozycja intensywnie żółta
+- Karty: białe, z mocnym cieniem, ikony w żywych kolorach
+- Metryki: tło białe, liczby w mocnym niebieskim
+- Alerty: tła w intensywnych kolorach (np. czerwony, pomarańczowy)
+- Przyciski: żółte lub niebieskie, tekst biały
+- Tryb ciemny: tło #121212, tekst jasny, akcenty mocne
+
+*/
+
+:root {
+  /* Material Design color palette - grays and navy */
+  --md-primary: #1a237e;       /* Deep navy - primary color */
+  --md-primary-light: #534bae; /* Lighter navy */
+  --md-primary-dark: #000051;  /* Darker navy */
+  --md-secondary: #455a64;     /* Blue-gray - secondary color */
+  --md-secondary-light: #718792;
+  --md-secondary-dark: #1c313a;
+  --md-surface: #fafafa;       /* Light surface color */
+  --md-background: #f5f5f5;    /* Light background color */
+  --md-error: #b00020;         /* Material design error color */
+  --md-warning: #ff8f00;       /* Material design warning */
+  --md-success: #00c853;       /* Material design success */
+  /* For dark mode */
+  --md-dark-surface: #121212;  /* Dark surface color */
+  --md-dark-background: #1e1e1e;
+  --md-dark-elevated: #2d2d2d;
+  /* Material elevation shadows */
+  --md-elevation-1: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  --md-elevation-2: 0 3px 6px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.12);
+  --md-elevation-3: 0 10px 20px rgba(0,0,0,0.15), 0 3px 6px rgba(0,0,0,0.10);
+  --md-elevation-4: 0 14px 28px rgba(0,0,0,0.18), 0 5px 10px rgba(0,0,0,0.12);
+  /* Rounded corners - Material Design uses 4px, 8px, and 16px */
+  --md-radius-small: 4px;
+  --md-radius-medium: 8px;
+  --md-radius-large: 16px;
+}
+
+body, .stApp {
+  background: var(--md-background);
+  color: rgba(0, 0, 0, 0.87);
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+body.dark, .stApp.dark {
+  background: var(--md-dark-background);
+  color: rgba(255, 255, 255, 0.87);
+}
+.stSidebar {
+  background: var(--md-dark-surface) !important;
+  color: rgba(255, 255, 255, 0.87) !important;
+  border-right: none !important;
+  box-shadow: var(--md-elevation-2);
+}
+.stSidebar .menu-item {
+  padding: 12px 16px;
+  border-radius: var(--md-radius-small);
+  margin-bottom: 8px;
+  transition: background 0.2s;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+.stSidebar .menu-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.stSidebar .active {
+  background: var(--md-primary) !important;
+  color: white !important;
+  font-weight: 500;
+  border-left: none;
+  box-shadow: var(--md-elevation-1);
+}
+.stSidebar .active:hover {
+  background: var(--md-primary-light) !important;
+}
+.stSidebar .icon, .stSidebar .feather {
+  font-size: 1.5rem !important;
+  margin-right: 16px;
+  vertical-align: middle;
+  min-width: 24px;
+  text-align: center;
+  color: inherit;
+}
+.card {
+  background: white;
+  border-radius: var(--md-radius-medium);
+  box-shadow: var(--md-elevation-1);
+  padding: 16px;
+  margin-bottom: 16px;
+  border: none;
+  transition: box-shadow 0.3s ease;
+}
+.card:hover {
+  box-shadow: var(--md-elevation-2);
+}
+body.dark .card, .stApp.dark .card {
+  background: var(--md-dark-elevated);
+  color: rgba(255, 255, 255, 0.87);
+  border: none;
+}
+.card.metric {
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+}
+.product-card {
+  background: white;
+  border-radius: var(--md-radius-medium);
+  box-shadow: var(--md-elevation-1);
+  padding: 16px;
+  margin-bottom: 16px;
+  border: none !important;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+.product-card:hover {
+  box-shadow: var(--md-elevation-2);
+}
+body.dark .product-card, .stApp.dark .product-card {
+  background: var(--md-dark-elevated);
+  color: rgba(255, 255, 255, 0.87);
+}
+.product-card.nabial::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: #4f8cff; }
+.product-card.mieso::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: #ef5350; }
+button, .stButton>button {
+  background-color: var(--md-primary) !important;
+  color: white !important;
+  border: none;
+  border-radius: var(--md-radius-small);
+  padding: 8px 16px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 14px;
+  height: 36px;
+  box-shadow: var(--md-elevation-1);
+  transition: background 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+button:hover, .stButton>button:hover {
+  background-color: var(--md-primary-light) !important;
+  box-shadow: var(--md-elevation-2);
+}
+.alert {
+  border-radius: var(--md-radius-small);
+  padding: 16px;
+  margin-bottom: 16px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--md-elevation-1);
+}
+.alert.info { background: rgba(33, 150, 243, 0.1); color: #2196f3; }
+.alert.success { background: rgba(76, 175, 80, 0.1); color: var(--md-success); }
+.alert.warning { background: rgba(255, 179, 0, 0.1); color: var(--md-warning); }
+.alert.danger { background: rgba(176, 0, 32, 0.1); color: var(--md-error); }
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  margin-bottom: 24px;
+  color: rgba(0, 0, 0, 0.6);
+}
+.breadcrumbs .crumb {
+  color: var(--md-secondary);
+  text-decoration: none;
+}
+.breadcrumbs .crumb.active {
+  font-weight: 500;
+  color: var(--md-primary);
+}
+body.dark .breadcrumbs {
+  color: rgba(255, 255, 255, 0.6);
+}
+body.dark .breadcrumbs .crumb {
+  color: rgba(255, 255, 255, 0.7);
+}
+body.dark .breadcrumbs .crumb.active {
+  color: white;
+}
+h1, .stApp h1, .stApp.dark h1 {
+  font-size: 24px !important;
+  line-height: 2rem !important;
+  font-weight: 400;
+  letter-spacing: 0;
+  margin-bottom: 24px;
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+body.dark h1, .stApp.dark h1 {
+  color: rgba(255, 255, 255, 0.87) !important;
+}
+h2, .stApp h2, .stApp.dark h2 {
+  font-size: 20px !important;
+  line-height: 1.6rem !important;
+  font-weight: 500;
+  letter-spacing: 0.15px;
+  margin-bottom: 16px;
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+body.dark h2, .stApp.dark h2 {
+  color: rgba(255, 255, 255, 0.87) !important;
+}
+
+/* Responsywność */
+@media (max-width: 900px) {
+  .stSidebar {
+    min-width: 64px !important;
+    max-width: 64px !important;
+    padding: 12px 4px 12px 4px !important;
+  }
+  .stSidebar .menu-item span:not(.icon):not(.feather),
+  .stSidebar .menu-item label,
+  .stSidebar .menu-item .crumb {
+    display: none !important;
+  }
+  .stSidebar .icon, .stSidebar .feather {
+    margin-right: 0 !important;
+    font-size: 2.2rem !important;
+  }
+}
+@media (max-width: 600px) {
+  .card, .product-card { padding: 10px 4px; }
+  .breadcrumbs { font-size: 0.98rem; margin-bottom: 8px; }
+  .card.metric { flex-direction: column; align-items: flex-start; font-size: 1.1rem; }
+  .product-card { flex-direction: column; gap: 6px; }
+  button, .stButton>button { width: 100%; font-size: 1rem; }
+}
+
+/* Tooltipy dla ikon menu */
+.stSidebar .icon[title], .stSidebar .feather[title] {
+  position: relative;
+}
+.stSidebar .icon[title]:hover:after, .stSidebar .feather[title]:hover:after {
+  content: attr(title);
+  position: absolute;
+  left: 110%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #23262b;
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  font-size: 0.98rem;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  opacity: 0.95;
+}
+
+/* --- Nagłówki i typografia --- */
+h1, .stApp h1, .stApp.dark h1 {
+  font-size: 24px !important;
+  line-height: 2rem !important;
+  font-weight: 400;
+  letter-spacing: 0;
+  margin-bottom: 24px;
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+h2, .stApp h2, .stApp.dark h2 {
+  font-size: 20px !important;
+  line-height: 1.6rem !important;
+  font-weight: 500;
+  letter-spacing: 0.15px;
+  margin-bottom: 16px;
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+
+/* --- CTA i akcenty --- */
+button, .stButton>button {
+  background-color: var(--md-primary) !important;
+  color: white !important;
+  border: none;
+  border-radius: var(--md-radius-small);
+  padding: 8px 16px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 14px;
+  height: 36px;
+  box-shadow: var(--md-elevation-1);
+  transition: background 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+button:hover, .stButton>button:hover {
+  background-color: var(--md-primary-light) !important;
+  box-shadow: var(--md-elevation-2);
+}
+
+.has-tooltip {
+  position: relative;
+  cursor: pointer;
+}
+.has-tooltip .tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  width: max-content;
+  background: #222;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 6px 12px;
+  position: absolute;
+  z-index: 10;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.95em;
+  box-shadow: 0 2px 8px #0003;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.has-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+.main .block-container {
+  background: var(--md-dark-background) !important;
+  color: rgba(255,255,255,0.87);
+} 
