@@ -67,8 +67,8 @@ Wariant kontrastowy (propozycja):
 }
 
 body, .stApp {
-  background: var(--bg-light);
-  color: var(--text-light);
+  background: var(--bg-content) !important;
+  color: var(--text-light) !important;
   font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif;
   font-size: 1.08rem;
   letter-spacing: 0.01em;
@@ -680,6 +680,29 @@ button:hover, .stButton>button:hover {
 }
 
 .main .block-container {
-  background: var(--md-dark-background) !important;
-  color: rgba(255,255,255,0.87);
+  background: var(--bg-content) !important;
+  color: var(--text-light) !important;
+  padding: 2rem 1.5rem;
+  border-radius: 8px;
+}
+
+/* Dostosowanie kolorów elementów formularzy */
+.stTextInput > div > div > input, 
+.stSelectbox > div > div > select,
+.stDateInput > div > div > input {
+  background-color: #2a2d36 !important;
+  color: var(--text-light) !important;
+  border-color: #444 !important;
+}
+
+/* Dostosowanie wyświetlania danych */
+.stDataFrame, .stTable {
+  background-color: #2a2d36 !important;
+}
+
+/* Styl dla przycisków w ciemnym motywie */
+.stButton > button {
+  background-color: var(--accent) !important;
+  color: #121212 !important;
+  font-weight: 600;
 } 
