@@ -484,3 +484,18 @@ NIP 779-10-11-327
   }
 }
 
+2025-05-11 21:30:28,270 INFO: Prompt do LLM (sklep: Biedronka): Sklep 3218 TARGOWA 4
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+...
+2025-05-11 21:30:28,271 INFO: Błąd LLM: openai nie jest zainstalowane. Dodaj 'openai' do requirements.txt i zainstaluj.
+2025-05-11 21:32:20,843 INFO: Prompt do LLM (sklep: Biedronka): Sklep 3218 TARGOWA 4
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+...
+2025-05-11 21:34:57,592 INFO: HTTP Request: POST http://192.168.0.167:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2025-05-11 21:34:57,594 INFO: Błąd LLM: Expanders may not be nested inside other expanders.

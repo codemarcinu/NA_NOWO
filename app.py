@@ -151,18 +151,12 @@ def render_add_receipt():
 # --- 4. Funkcja do przeglądania oczekujących paragonów ---
 def render_pending_receipts():
     st.title("Paragony oczekujące na przetworzenie")
-    
-    # Pobierz paragony oczekujące
     receipts = get_pending_receipts()
-    
     if not receipts:
         st.info("Brak paragonów oczekujących na przetworzenie.")
         return
-    
-    # Wyświetl listę paragonów
     for receipt in receipts:
         receipt_id, nazwa_pliku, sciezka, sklep, tekst_ocr, data_dodania = receipt
-        
         st.markdown(f"""
         <div class="card">
             <h3>{nazwa_pliku}</h3>
@@ -170,10 +164,7 @@ def render_pending_receipts():
             <p>Data dodania: {data_dodania}</p>
         </div>
         """, unsafe_allow_html=True)
-        
-        # Formularz do przetworzenia paragonu
         with st.expander(f"Przetwórz paragon #{receipt_id}"):
-            # Podgląd pliku
             if os.path.exists(sciezka):
                 if sciezka.lower().endswith(('jpg', 'jpeg', 'png')):
                     image = Image.open(sciezka)
@@ -185,60 +176,49 @@ def render_pending_receipts():
                             st.image(images[0], caption=f"Podgląd pierwszej strony: {nazwa_pliku}", width=400)
                     except Exception as e:
                         st.error(f"Błąd podglądu PDF: {str(e)}")
-            
-            # Edycja tekstu OCR
             edited_ocr = st.text_area(f"Edytuj tekst OCR", value=tekst_ocr, height=200)
-            
-            # Przyciski akcji
             if st.button("Analizuj LLM", key=f"analyze_{receipt_id}"):
                 try:
                     st.info("Wysyłanie do analizy... To może potrwać chwilę.")
                     log_event(f"Prompt do LLM (sklep: {sklep}): {edited_ocr[:100]}...")
                     products = extract_products_from_receipt(edited_ocr, sklep)
-                    
-                    # Zapisz wyniki do session_state
                     key = f"products_{receipt_id}"
                     st.session_state[key] = products
-                    
                     st.success(f"Analiza zakończona. Wykryto {len(products)} produktów.")
-                    
-                    # Wyświetl wyniki
-                    for i, prod in enumerate(products):
-                        with st.expander(f"Produkt #{i+1}: {prod.get('nazwa_znormalizowana', 'Brak nazwy')}"):
-                            # Konwertuj dict na JSON, a następnie z powrotem aby zapewnić edytowalność
-                            prod_json = json.dumps(prod, indent=2)
-                            edited_prod_json = st.text_area(f"Edytuj dane produktu", value=prod_json, height=300, key=f"prod_{receipt_id}_{i}")
-                            
-                            try:
-                                # Aktualizuj produkt w session_state
-                                edited_prod = json.loads(edited_prod_json)
-                                st.session_state[key][i] = edited_prod
-                            except json.JSONDecodeError as e:
-                                st.error(f"Błąd formatu JSON: {str(e)}")
-                    
-                    # Przycisk do zapisania wszystkich produktów
-                    if st.button("Zapisz wszystkie produkty do bazy", key=f"save_all_{receipt_id}"):
-                        for prod in st.session_state[key]:
-                            try:
-                                add_product(prod)
-                                st.success(f"Dodano produkt: {prod.get('nazwa_znormalizowana', 'Brak nazwy')}")
-                            except Exception as e:
-                                st.error(f"Błąd dodawania produktu: {str(e)}")
-                        
-                        # Usuń paragon z oczekujących
-                        delete_pending_receipt(receipt_id)
-                        st.success("Wszystkie produkty zostały zapisane. Paragon został usunięty z oczekujących.")
-                        st.rerun()
-                
                 except Exception as e:
                     st.error(f"Błąd analizy LLM: {str(e)}")
                     log_event(f"Błąd LLM: {str(e)}")
-            
-            # Przycisk do usunięcia paragonu
+            key = f"products_{receipt_id}"
+            if key in st.session_state:
+                products = st.session_state[key]
+                st.markdown("#### Produkty wykryte przez LLM:")
+                for i, prod in enumerate(products):
+                    st.markdown(f"**Produkt #{i+1}: {prod.get('nazwa_znormalizowana', 'Brak nazwy')}**")
+                    prod_json = json.dumps(prod, indent=2, ensure_ascii=False)
+                    edited_prod_json = st.text_area(
+                        f"Edytuj dane produktu #{i+1}",
+                        value=prod_json,
+                        height=300,
+                        key=f"prod_{receipt_id}_{i}"
+                    )
+                    try:
+                        edited_prod = json.loads(edited_prod_json)
+                        st.session_state[key][i] = edited_prod
+                    except json.JSONDecodeError as e:
+                        st.error(f"Błąd formatu JSON: {str(e)}")
+                if st.button("Zapisz wszystkie produkty do bazy", key=f"save_all_{receipt_id}"):
+                    for prod in st.session_state[key]:
+                        try:
+                            add_product(prod)
+                            st.success(f"Dodano produkt: {prod.get('nazwa_znormalizowana', 'Brak nazwy')}")
+                        except Exception as e:
+                            st.error(f"Błąd dodawania produktu: {str(e)}")
+                    delete_pending_receipt(receipt_id)
+                    st.success("Wszystkie produkty zostały zapisane. Paragon został usunięty z oczekujących.")
+                    st.rerun()
             if st.button("Usuń paragon", key=f"delete_{receipt_id}"):
                 try:
                     delete_pending_receipt(receipt_id)
-                    # Spróbuj usunąć plik tymczasowy
                     try:
                         if os.path.exists(sciezka):
                             os.unlink(sciezka)
@@ -268,7 +248,66 @@ def render_shopping_list():
 
 def render_settings():
     st.title("Ustawienia")
-    st.info("Ten widok jest w trakcie implementacji.")
+    
+    # Ustawienia modelu LLM
+    st.subheader("Konfiguracja modelu językowego (LLM)")
+    import dotenv
+    import os
+    from dotenv import load_dotenv
+    load_dotenv()
+    llm_type = os.getenv('LLM_TYPE', 'local')
+    local_url = os.getenv('LOCAL_LLM_URL', 'http://192.168.0.167:1234/v1')
+    local_model = os.getenv('LOCAL_LLM_MODEL', 'bielik-4.5b-v3.0-instruct')
+    api_key = os.getenv('GEMINI_API_KEY', '')
+    api_url = os.getenv('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent')
+
+    selected_llm = st.radio(
+        "Wybierz model LLM",
+        options=["Lokalny (Bielik)", "Gemini API"],
+        index=0 if llm_type == 'local' else 1
+    )
+
+    if selected_llm == "Lokalny (Bielik)":
+        local_url = st.text_input("URL lokalnego modelu", value=local_url)
+        local_model = st.text_input("Nazwa lokalnego modelu", value=local_model)
+        # Sprawdź czy model jest dostępny
+        try:
+            import requests
+            response = requests.get(f"{local_url}/models")
+            if response.status_code == 200:
+                st.success("Model lokalny jest dostępny!")
+            else:
+                st.error("Nie można połączyć się z lokalnym modelem. Sprawdź czy LM Studio jest uruchomione.")
+        except Exception as e:
+            st.error(f"Błąd podczas sprawdzania modelu lokalnego: {str(e)}")
+    else:
+        api_key = st.text_input("Klucz API Gemini", value=api_key, type="password")
+        api_url = st.text_input("URL API Gemini", value=api_url)
+
+    if st.button("Zapisz ustawienia LLM"):
+        env_path = '.env'
+        env_content = {}
+        if os.path.exists(env_path):
+            with open(env_path, 'r') as f:
+                for line in f:
+                    if '=' in line:
+                        key, value = line.split('=', 1)
+                        env_content[key] = value.strip()
+        env_content['LLM_TYPE'] = 'local' if selected_llm == "Lokalny (Bielik)" else 'gemini'
+        if selected_llm == "Lokalny (Bielik)":
+            env_content['LOCAL_LLM_URL'] = local_url
+            env_content['LOCAL_LLM_MODEL'] = local_model
+        else:
+            env_content['GEMINI_API_KEY'] = api_key
+            env_content['GEMINI_API_URL'] = api_url
+        with open(env_path, 'w') as f:
+            for key, value in env_content.items():
+                f.write(f"{key}={value}\n")
+        dotenv.load_dotenv()
+        st.success("Ustawienia LLM zostały zapisane.")
+    
+    # Pozostałe ustawienia...
+    st.info("Pozostałe ustawienia aplikacji...")
 
 # --- 6. Material Design CSS i ikony ---
 st.markdown("""

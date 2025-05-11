@@ -2,4 +2,5 @@ streamlit
 pytesseract
 Pillow
 pandas
-python-dotenv 
+python-dotenv
+openai 
