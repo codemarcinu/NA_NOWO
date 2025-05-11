@@ -228,7 +228,7 @@ def render_pending_receipts():
                         # Usuń paragon z oczekujących
                         delete_pending_receipt(receipt_id)
                         st.success("Wszystkie produkty zostały zapisane. Paragon został usunięty z oczekujących.")
-                        st.experimental_rerun()
+                        st.rerun()
                 
                 except Exception as e:
                     st.error(f"Błąd analizy LLM: {str(e)}")
@@ -245,7 +245,7 @@ def render_pending_receipts():
                     except:
                         pass
                     st.success("Paragon został usunięty.")
-                    st.experimental_rerun()
+                    st.rerun()
                 except Exception as e:
                     st.error(f"Błąd usuwania paragonu: {str(e)}")
 
@@ -298,7 +298,7 @@ if 'page' not in st.session_state:
 # --- 9. Funkcja zmiany strony ---
 def change_page(page_id):
     st.session_state.page = page_id
-    st.experimental_rerun()
+    st.rerun()
 
 # --- 10. Generowanie menu bocznego ---
 for item in menu_data:
