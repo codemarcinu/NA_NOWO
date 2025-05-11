@@ -402,3 +402,85 @@ Pom...
   "modelVersion": "gemini-2.0-flash-lite"
 }
 
+2025-05-11 21:20:04,373 INFO: Plik wgrany: receipt.pdf
+2025-05-11 21:20:04,373 INFO: OCR OK dla pliku receipt.pdf. Tekst: Sklep 3218 TARGOWA 4
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+...
+2025-05-11 21:20:30,439 INFO: Prompt do LLM (sklep: Biedronka): Sklep 3218 TARGOWA 4
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+...
+2025-05-11 21:20:30,770 INFO: [LLM] Pełna odpowiedź Gemini: {
+  "error": {
+    "code": 400,
+    "message": "API key expired. Please renew the API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "generativelanguage.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key expired. Please renew the API key."
+      }
+    ]
+  }
+}
+
+2025-05-11 21:20:30,770 INFO: [LLM] Błąd Gemini: 400 {
+  "error": {
+    "code": 400,
+    "message": "API key expired. Please renew the API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "generativelanguage.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key expired. Please renew the API key."
+      }
+    ]
+  }
+}
+
+2025-05-11 21:20:30,770 INFO: Błąd LLM: Błąd Gemini: 400 {
+  "error": {
+    "code": 400,
+    "message": "API key expired. Please renew the API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "generativelanguage.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key expired. Please renew the API key."
+      }
+    ]
+  }
+}
+

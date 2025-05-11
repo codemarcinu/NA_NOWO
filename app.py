@@ -295,10 +295,9 @@ menu_data = [
 if 'page' not in st.session_state:
     st.session_state.page = "dashboard"
 
-# --- 9. Funkcja zmiany strony ---
+# --- 9. Funkcja zmiany strony (bez rerun) ---
 def change_page(page_id):
     st.session_state.page = page_id
-    st.rerun()
 
 # --- 10. Generowanie menu bocznego ---
 for item in menu_data:
@@ -307,14 +306,13 @@ for item in menu_data:
     menu_item_class = "active" if is_active else ""
     
     # Tworzenie przycisku menu
-    if st.sidebar.button(
+    st.sidebar.button(
         f"{item['label']}",
         key=f"menu_{item['id']}",
         help=f"Przejdź do sekcji {item['label']}",
         on_click=change_page,
         args=(item["id"],)
-    ):
-        pass  # Przycisk automatycznie wywoła funkcję change_page
+    )
 
 # --- 11. CSS do stylizacji przycisków menu ---
 st.markdown("""
@@ -375,3 +373,10 @@ elif st.session_state.page == "settings":
     render_settings()
 else:
     render_dashboard()
+
+# --- rerun po zmianie strony (po obsłudze przycisków) ---
+if "last_page" not in st.session_state:
+    st.session_state.last_page = st.session_state.page
+if st.session_state.page != st.session_state.last_page:
+    st.session_state.last_page = st.session_state.page
+    st.rerun()
