@@ -177,70 +177,95 @@ def render_pending_receipts():
             <p>Data dodania: {data_dodania}</p>
         </div>
         """, unsafe_allow_html=True)
-        with st.expander(f"Przetwórz paragon #{receipt_id}"):
+        # 1. Podgląd pliku i tekstu OCR
+        cols = st.columns([2, 3])
+        with cols[0]:
             if os.path.exists(sciezka):
                 if sciezka.lower().endswith(('jpg', 'jpeg', 'png')):
                     image = Image.open(sciezka)
-                    st.image(image, caption=f"Podgląd: {nazwa_pliku}", width=400)
+                    st.image(image, caption=f"Podgląd: {nazwa_pliku}", width=300)
                 elif sciezka.lower().endswith('pdf') and convert_from_path:
                     try:
                         images = convert_from_path(sciezka, first_page=1, last_page=1)
                         if images:
-                            st.image(images[0], caption=f"Podgląd pierwszej strony: {nazwa_pliku}", width=400)
+                            st.image(images[0], caption=f"Podgląd pierwszej strony: {nazwa_pliku}", width=300)
                     except Exception as e:
                         st.error(f"Błąd podglądu PDF: {str(e)}")
-            edited_ocr = st.text_area(f"Edytuj tekst OCR", value=tekst_ocr, height=200)
-            if st.button("Analizuj LLM", key=f"analyze_{receipt_id}"):
-                try:
-                    st.info("Wysyłanie do analizy... To może potrwać chwilę.")
-                    log_event(f"Prompt do LLM (sklep: {sklep}): {edited_ocr[:100]}...")
-                    products = extract_products_from_receipt(edited_ocr, sklep)
-                    key = f"products_{receipt_id}"
-                    st.session_state[key] = products
-                    st.success(f"Analiza zakończona. Wykryto {len(products)} produktów.")
-                except Exception as e:
-                    st.error(f"Błąd analizy LLM: {str(e)}")
-                    log_event(f"Błąd LLM: {str(e)}")
-            key = f"products_{receipt_id}"
-            if key in st.session_state:
-                products = st.session_state[key]
-                st.markdown("#### Produkty wykryte przez LLM:")
-                for i, prod in enumerate(products):
-                    st.markdown(f"**Produkt #{i+1}: {prod.get('nazwa_znormalizowana', 'Brak nazwy')}**")
-                    prod_json = json.dumps(prod, indent=2, ensure_ascii=False)
-                    edited_prod_json = st.text_area(
-                        f"Edytuj dane produktu #{i+1}",
-                        value=prod_json,
-                        height=300,
-                        key=f"prod_{receipt_id}_{i}"
-                    )
+        with cols[1]:
+            st.markdown("**Tekst OCR (możesz poprawić przed analizą):**")
+            edited_ocr = st.text_area("", value=tekst_ocr, height=200, key=f"ocr_{receipt_id}")
+        # 2. Analiza LLM
+        if st.button("Analizuj produkty przez LLM", key=f"analyze_{receipt_id}"):
+            try:
+                st.info("Wysyłanie do analizy... To może potrwać chwilę.")
+                log_event(f"Prompt do LLM (sklep: {sklep}): {edited_ocr[:100]}...")
+                products = extract_products_from_receipt(edited_ocr, sklep)
+                st.session_state[f"products_{receipt_id}"] = products
+                st.success(f"Analiza zakończona. Wykryto {len(products)} produktów.")
+            except Exception as e:
+                st.error(f"Błąd analizy LLM: {str(e)}")
+                log_event(f"Błąd LLM: {str(e)}")
+        # 3. Edycja produktów (proste pola)
+        key = f"products_{receipt_id}"
+        if key in st.session_state:
+            st.markdown("---")
+            st.markdown("### Edytuj wykryte produkty")
+            products = st.session_state[key]
+            for i, prod in enumerate(products):
+                st.markdown(f"#### Produkt #{i+1}")
+                cols = st.columns(4)
+                with cols[0]:
+                    prod["nazwa_znormalizowana"] = st.text_input(f"Nazwa", value=prod.get("nazwa_znormalizowana", ""), key=f"nazwa_{receipt_id}_{i}")
+                with cols[1]:
+                    prod["ilosc"] = st.number_input(f"Ilość", value=float(prod.get("ilosc", 1)), min_value=0.0, key=f"ilosc_{receipt_id}_{i}")
+                with cols[2]:
+                    prod["data_waznosci"] = st.text_input(f"Data ważności (opcjonalnie)", value=prod.get("data_waznosci", ""), key=f"dataw_{receipt_id}_{i}")
+                with cols[3]:
+                    prod["cena_laczna"] = st.number_input(f"Cena (opcjonalnie)", value=float(prod.get("cena_laczna", 0)), min_value=0.0, key=f"cena_{receipt_id}_{i}")
+            # 4. Dodaj produkt ręcznie
+            st.markdown("---")
+            st.markdown("#### Dodaj produkt ręcznie (jeśli czegoś brakuje)")
+            with st.form(f"manual_add_{receipt_id}"):
+                nazwa = st.text_input("Nazwa produktu")
+                ilosc = st.number_input("Ilość", min_value=0.0, value=1.0)
+                dataw = st.text_input("Data ważności (opcjonalnie)")
+                cena = st.number_input("Cena (opcjonalnie)", min_value=0.0, value=0.0)
+                submit_manual = st.form_submit_button("Dodaj produkt")
+                if submit_manual and nazwa:
+                    manual_prod = {
+                        "nazwa": nazwa,
+                        "nazwa_znormalizowana": nazwa,
+                        "ilosc": ilosc,
+                        "data_waznosci": dataw,
+                        "cena_laczna": cena
+                    }
+                    st.session_state[key].append(manual_prod)
+                    st.success(f"Dodano produkt: {nazwa}")
+            # 5. Zapisz produkty do bazy
+            if st.button("Zapisz wszystkie produkty do bazy", key=f"save_all_{receipt_id}"):
+                dodane = 0
+                for prod in st.session_state[key]:
                     try:
-                        edited_prod = json.loads(edited_prod_json)
-                        st.session_state[key][i] = edited_prod
-                    except json.JSONDecodeError as e:
-                        st.error(f"Błąd formatu JSON: {str(e)}")
-                if st.button("Zapisz wszystkie produkty do bazy", key=f"save_all_{receipt_id}"):
-                    for prod in st.session_state[key]:
-                        try:
-                            add_product(prod)
-                            st.success(f"Dodano produkt: {prod.get('nazwa_znormalizowana', 'Brak nazwy')}")
-                        except Exception as e:
-                            st.error(f"Błąd dodawania produktu: {str(e)}")
-                    delete_pending_receipt(receipt_id)
-                    st.success("Wszystkie produkty zostały zapisane. Paragon został usunięty z oczekujących.")
-                    st.rerun()
-            if st.button("Usuń paragon", key=f"delete_{receipt_id}"):
+                        add_product(prod)
+                        dodane += 1
+                    except Exception as e:
+                        st.error(f"Błąd dodawania produktu: {str(e)}")
+                delete_pending_receipt(receipt_id)
+                st.success(f"Dodano {dodane} produktów z paragonu {nazwa_pliku}. Paragon został usunięty z oczekujących.")
+                st.rerun()
+        # Usuń paragon
+        if st.button("Usuń paragon", key=f"delete_{receipt_id}"):
+            try:
+                delete_pending_receipt(receipt_id)
                 try:
-                    delete_pending_receipt(receipt_id)
-                    try:
-                        if os.path.exists(sciezka):
-                            os.unlink(sciezka)
-                    except:
-                        pass
-                    st.success("Paragon został usunięty.")
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"Błąd usuwania paragonu: {str(e)}")
+                    if os.path.exists(sciezka):
+                        os.unlink(sciezka)
+                except:
+                    pass
+                st.success("Paragon został usunięty.")
+                st.rerun()
+            except Exception as e:
+                st.error(f"Błąd usuwania paragonu: {str(e)}")
 
 # --- 5. Inne funkcje dla pozostałych widoków ---
 def render_products_list():

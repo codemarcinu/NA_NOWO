@@ -541,3 +541,103 @@ www.lidl.pl
 Ba...
 2025-05-12 11:47:09,713 INFO: HTTP Request: POST http://192.168.0.167:1234/v1/chat/completions "HTTP/1.1 404 Not Found"
 2025-05-12 11:47:09,714 INFO: [LLM] Błąd lokalnego LLM: Error code: 404 - {'error': {'message': 'Failed to load model "bielik-4.5b-v3.0-instruct". Error: Failed to load model', 'type': 'invalid_request_error', 'param': 'model', 'code': 'model_not_found'}}
+2025-05-12 12:03:30,531 INFO: Plik wgrany: Obrazek PNG.png
+2025-05-12 12:03:30,531 INFO: OCR OK dla pliku Obrazek PNG.png. Tekst: Lidl sp. z.o0. o. sp. k.
+Poznańska 48, Jankowice
+62-888 Tarnowo Podgórne
+
+www.lidl.pl
+
+2024-11-16
+Ba...
+2025-05-12 12:04:03,376 INFO: Prompt do LLM (sklep: Lidl): Lidl sp. z.o0. o. sp. k.
+Poznańska 48, Jankowice
+62-888 Tarnowo Podgórne
+
+www.lidl.pl
+
+2024-11-16
+Ba...
+2025-05-12 12:04:08,078 INFO: [LLM] Pełna odpowiedź Gemini: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n[\n  {\n    \"produkt\": \"Baton Protein Nuts\",\n    \"nazwa_znormalizowana\": \"Baton Protein Nuts\",\n    \"kategoria\": \"Przekąski\",\n    \"ilosc\": 2,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 1.79,\n    \"cena_laczna\": 3.58,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"2024-11-16\",\n    \"sklep\": \"Lidl\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"B\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Tortilla Chipsy\",\n    \"nazwa_znormalizowana\": \"Tortilla Chipsy\",\n    \"kategoria\": \"Przekąski\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 3.89,\n    \"cena_laczna\": 3.89,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"2024-11-16\",\n    \"sklep\": \"Lidl\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"C\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"HALLS cukierki mięt.\",\n    \"nazwa_znormalizowana\": \"HALLS cukierki miętowe\",\n    \"kategoria\": \"Słodycze\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 2.49,\n    \"cena_laczna\": 2.49,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"2024-11-16\",\n    \"sklep\": \"Lidl\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"A\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Heineken 8% piwo\",\n    \"nazwa_znormalizowana\": \"Heineken 8% piwo\",\n    \"kategoria\": \"Alkohol\",\n    \"ilosc\": 16,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 4.59,\n    \"cena_laczna\": 73.44,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"2024-11-16\",\n    \"sklep\": \"Lidl\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"A\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  }\n]\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.011424505555784548
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 886,
+    "candidatesTokenCount": 770,
+    "totalTokenCount": 1656,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 886
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 770
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash-lite"
+}
+
+2025-05-12 12:09:40,473 INFO: Plik wgrany: receipt.pdf
+2025-05-12 12:09:40,473 INFO: OCR OK dla pliku receipt.pdf. Tekst: Sklep 3218 TARGOWA 4
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+...
+2025-05-12 12:09:53,466 INFO: Prompt do LLM (sklep: Biedronka): Sklep 3218 TARGOWA 4
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+...
+2025-05-12 12:10:08,111 INFO: [LLM] Pełna odpowiedź Gemini: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n[\n  {\n    \"produkt\": \"Mleko UHT 1,5 1I\",\n    \"nazwa_znormalizowana\": \"Mleko UHT 1,5l\",\n    \"kategoria\": \"Mleko\",\n    \"ilosc\": 1.0,\n    \"jednostka\": \"l\",\n    \"cena_jednostkowa\": 3.29,\n    \"cena_laczna\": 3.29,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"c\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"PomkKroNaszSpiż240g\",\n    \"nazwa_znormalizowana\": \"Pomidory krojone w sosie własnym 240g\",\n    \"kategoria\": \"Warzywa w puszce\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 2.99,\n    \"cena_laczna\": 2.99,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"c\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"PomKroNaszSpiż240g\",\n    \"nazwa_znormalizowana\": \"Pomidory krojone w sosie własnym 240g\",\n    \"kategoria\": \"Warzywa w puszce\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 2.99,\n    \"cena_laczna\": 2.99,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"c\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Jogurt Nat 190 200g\",\n    \"nazwa_znormalizowana\": \"Jogurt naturalny 200g\",\n    \"kategoria\": \"Jogurt\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 1.05,\n    \"cena_laczna\": 1.05,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"c\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Jogurt Nat 190 200g\",\n    \"nazwa_znormalizowana\": \"Jogurt naturalny 200g\",\n    \"kategoria\": \"Jogurt\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 1.05,\n    \"cena_laczna\": 1.05,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"c\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"PaprykaOstraKamis16\",\n    \"nazwa_znormalizowana\": \"Papryka ostra Kamis\",\n    \"kategoria\": \"Przyprawy\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 1.99,\n    \"cena_laczna\": 1.99,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"B\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"SoczewicaPloNa500g\",\n    \"nazwa_znormalizowana\": \"Soczewica 500g\",\n    \"kategoria\": \"Kasze i ryż\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 5.86,\n    \"cena_laczna\": 5.86,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"e\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"WafelEstellaDes50g\",\n    \"nazwa_znormalizowana\": \"Wafel Estella\",\n    \"kategoria\": \"Słodycze\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 1.19,\n    \"cena_laczna\": 1.19,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"e\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"SerTwarPółtłu250g\",\n    \"nazwa_znormalizowana\": \"Ser twarogowy półtłusty 250g\",\n    \"kategoria\": \"Sery\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 4.05,\n    \"cena_laczna\": 4.05,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"=\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"MarchewLuz\",\n    \"nazwa_znormalizowana\": \"Marchew luz\",\n    \"kategoria\": \"Warzywa\",\n    \"ilosc\": 0.365,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 3.69,\n    \"cena_laczna\": 1.35,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"G\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Rabat\",\n    \"nazwa_znormalizowana\": \"Rabat\",\n    \"kategoria\": \"Rabat\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": -0.62,\n    \"cena_laczna\": -0.62,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": -0.62,\n    \"kategoria_podatkowa\": null,\n    \"status\": \"dostępny\",\n    \"pewnosc\": 100\n  },\n  {\n    \"produkt\": \"rapryka \u003eiodka\",\n    \"nazwa_znormalizowana\": \"Papryka słodka\",\n    \"kategoria\": \"Warzywa\",\n    \"ilosc\": 0.220,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 13.99,\n    \"cena_laczna\": 3.08,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"c\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Cebula Żółta Luz\",\n    \"nazwa_znormalizowana\": \"Cebula Żółta luz\",\n    \"kategoria\": \"Warzywa\",\n    \"ilosc\": 0.455,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 3.49,\n    \"cena_laczna\": 1.59,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"c\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  }\n]\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.0098548331774935376
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 993,
+    "candidatesTokenCount": 2587,
+    "totalTokenCount": 3580,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 993
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 2587
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash-lite"
+}
+
