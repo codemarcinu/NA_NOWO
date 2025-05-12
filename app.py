@@ -47,49 +47,62 @@ local_css("custom_theme.css")
 def render_dashboard():
     st.title("Dashboard")
     st.markdown("### Szybkie podsumowanie")
-    
-    # Przykładowe karty metryczne
+
+    # Pobierz dynamiczne metryki z bazy
+    from db.db_utils import count_all_products, count_expired_products, sum_expenses_current_month, count_expiring_soon_products
+    liczba_produktow = count_all_products()
+    liczba_przeterminowanych = count_expired_products()
+    suma_wydatkow = sum_expenses_current_month()
+    liczba_konczacych_sie = count_expiring_soon_products(3)
+
+    # Karty metryczne
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.markdown("""
+        st.markdown(f"""
         <div class="card metric">
             <i class="material-icons">inventory_2</i>
             <div>
                 <div>Produkty w zapasie</div>
-                <h2>34</h2>
+                <h2>{liczba_produktow}</h2>
             </div>
         </div>
         """, unsafe_allow_html=True)
-    
     with col2:
-        st.markdown("""
+        st.markdown(f"""
         <div class="card metric">
             <i class="material-icons">watch_later</i>
             <div>
                 <div>Produkty przeterminowane</div>
-                <h2>3</h2>
+                <h2>{liczba_przeterminowanych}</h2>
             </div>
         </div>
         """, unsafe_allow_html=True)
-    
     with col3:
-        st.markdown("""
+        st.markdown(f"""
         <div class="card metric">
             <i class="material-icons">payments</i>
             <div>
                 <div>Wydatki w tym miesiącu</div>
-                <h2>432 zł</h2>
+                <h2>{suma_wydatkow:.2f} zł</h2>
             </div>
         </div>
         """, unsafe_allow_html=True)
-    
+
     # Alerty
-    st.markdown("""
-    <div class="alert warning">
-        <i class="material-icons">warning</i>
-        <div>3 produkty niedługo się przeterminują</div>
-    </div>
-    """, unsafe_allow_html=True)
+    if liczba_konczacych_sie > 0:
+        st.markdown(f"""
+        <div class="alert warning">
+            <i class="material-icons">warning</i>
+            <div>{liczba_konczacych_sie} produkt(ów) niedługo się przeterminuje (do 3 dni)</div>
+        </div>
+        """, unsafe_allow_html=True)
+    if liczba_przeterminowanych > 0:
+        st.markdown(f"""
+        <div class="alert danger">
+            <i class="material-icons">error</i>
+            <div>{liczba_przeterminowanych} produkt(ów) jest już przeterminowanych!</div>
+        </div>
+        """, unsafe_allow_html=True)
 
 # --- 3. Funkcja do dodawania paragonu ---
 def render_add_receipt():

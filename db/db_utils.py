@@ -1,6 +1,6 @@
 import sqlite3
 from contextlib import closing
-from datetime import datetime
+from datetime import datetime, timedelta
 
 DB_PATH = 'produkty.db'
 
@@ -136,4 +136,47 @@ def delete_pending_receipt(receipt_id):
     """Usuwa oczekujący paragon o podanym id."""
     with closing(sqlite3.connect(DB_PATH)) as conn:
         with conn:
-            conn.execute('DELETE FROM paragony_oczekujace WHERE id=?', (receipt_id,)) 
+            conn.execute('DELETE FROM paragony_oczekujace WHERE id=?', (receipt_id,))
+
+def count_all_products():
+    """
+    Zwraca liczbę wszystkich produktów w bazie.
+    """
+    with closing(sqlite3.connect(DB_PATH)) as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT COUNT(*) FROM produkty')
+        return cur.fetchone()[0]
+
+def count_expired_products():
+    """
+    Zwraca liczbę produktów, których data ważności minęła (przeterminowane).
+    """
+    today = datetime.now().date()
+    with closing(sqlite3.connect(DB_PATH)) as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT COUNT(*) FROM produkty WHERE data_waznosci IS NOT NULL AND date(data_waznosci) < ?', (today.isoformat(),))
+        return cur.fetchone()[0]
+
+def sum_expenses_current_month():
+    """
+    Zwraca sumę wydatków (cena_laczna) z bieżącego miesiąca.
+    """
+    today = datetime.now()
+    first_day = today.replace(day=1).date().isoformat()
+    last_day = today.date().isoformat()
+    with closing(sqlite3.connect(DB_PATH)) as conn:
+        cur = conn.cursor()
+        cur.execute('''SELECT SUM(cena_laczna) FROM produkty WHERE data_zakupu IS NOT NULL AND date(data_zakupu) >= ? AND date(data_zakupu) <= ?''', (first_day, last_day))
+        result = cur.fetchone()[0]
+        return result if result else 0
+
+def count_expiring_soon_products(days=3):
+    """
+    Zwraca liczbę produktów, którym kończy się ważność w najbliższych X dniach (domyślnie 3).
+    """
+    today = datetime.now().date()
+    soon = today + timedelta(days=days)
+    with closing(sqlite3.connect(DB_PATH)) as conn:
+        cur = conn.cursor()
+        cur.execute('''SELECT COUNT(*) FROM produkty WHERE data_waznosci IS NOT NULL AND date(data_waznosci) >= ? AND date(data_waznosci) <= ?''', (today.isoformat(), soon.isoformat()))
+        return cur.fetchone()[0] 
