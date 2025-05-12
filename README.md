@@ -4,7 +4,7 @@
 Prosta aplikacja webowa (działająca lokalnie), która pomaga rejestrować zakupy spożywcze na podstawie elektronicznych paragonów (PDF/JPG/PNG), zarządzać zapasami w domu, planować posiłki i analizować wydatki. Wszystko w języku polskim, bez logowania.
 
 ## Główne funkcje
-- Rejestracja zakupów na podstawie paragonów (OCR + LLM Gemini 2.0 Flash Lite)
+- Rejestracja zakupów na podstawie paragonów (OCR + LLM Gemini 2.0 Flash Lite lub lokalny Bielik)
 - Kategoryzacja i podgląd produktów (ilości, daty ważności, kategorie)
 - Planowanie posiłków i "zużywanie" produktów
 - Prosta analityka wydatków (kalendarz, wykresy)
@@ -18,6 +18,9 @@ Prosta aplikacja webowa (działająca lokalnie), która pomaga rejestrować zaku
 ## Wymagania
 - Python 3.11 lub nowszy
 - System Linux (np. Linux Mint)
+- Tesseract OCR (`sudo apt install tesseract-ocr`)
+- (Opcjonalnie) Poppler do PDF (`sudo apt install poppler-utils`)
+- (Opcjonalnie) LM Studio do lokalnego modelu Bielik
 
 ## Instrukcja obsługi (krok po kroku)
 1. Otwórz terminal i przejdź do folderu z aplikacją.
@@ -30,17 +33,21 @@ Prosta aplikacja webowa (działająca lokalnie), która pomaga rejestrować zaku
    sudo apt update
    sudo apt install tesseract-ocr
    ```
-4. (Opcjonalnie) Zainstaluj pdf2image, jeśli chcesz obsługiwać PDF:
+4. (Opcjonalnie) Zainstaluj pdf2image i poppler-utils, jeśli chcesz obsługiwać PDF:
    ```bash
    pip install pdf2image
    sudo apt install poppler-utils
    ```
-5. Skonfiguruj klucz API Gemini (patrz niżej).
-6. Uruchom aplikację:
+5. (Opcjonalnie) Skonfiguruj lokalny model Bielik w LM Studio:
+   - Pobierz model Bielik-4.5b-v3.0-instruct i uruchom LM Studio z API OpenAI na porcie 1234.
+   - W aplikacji przejdź do **Ustawienia** i wybierz "Lokalny (Bielik)".
+   - Sprawdź połączenie z modelem.
+6. (Alternatywnie) Skonfiguruj klucz API Gemini (patrz niżej).
+7. Uruchom aplikację:
    ```bash
    streamlit run app.py
    ```
-7. W przeglądarce pojawi się menu z modułami:
+8. W przeglądarce pojawi się menu z modułami:
    - **Dashboard**: szybkie podsumowanie zapasów i wydatków.
    - **Dodaj paragon (OCR)**: wgraj plik, wybierz sklep, przetwórz OCR. Paragon trafi do kolejki oczekujących.
    - **Paragony oczekujące na przetworzenie**: popraw tekst OCR, wyślij do LLM, edytuj produkty i zapisz do bazy. **Dopiero tutaj produkty trafiają do bazy danych!**
@@ -48,7 +55,7 @@ Prosta aplikacja webowa (działająca lokalnie), która pomaga rejestrować zaku
    - **Planowanie posiłków**: wybierz produkty do zużycia, ilość zostanie odjęta z bazy.
    - **Analityka wydatków**: wykresy, kalendarz zakupów, sumy wg sklepów/kategorii.
    - **Lista zakupów**: automatyczna lista na podstawie braków i dat ważności.
-   - **Ustawienia**: konfiguracja klucza API i innych opcji.
+   - **Ustawienia**: konfiguracja modelu LLM, klucza API i innych opcji.
 
 **Podgląd plików:**
 - Po wgraniu obrazu lub PDF możesz kliknąć "Powiększ podgląd..." pod miniaturą, aby zobaczyć plik w większym rozmiarze.
@@ -60,17 +67,12 @@ Prosta aplikacja webowa (działająca lokalnie), która pomaga rejestrować zaku
 3. Tam możesz poprawić tekst OCR, wysłać do LLM, edytować produkty i **dopiero po zatwierdzeniu produkty zostaną zapisane do bazy**.
 4. Dzięki temu masz pełną kontrolę nad tym, co trafia do bazy danych.
 
-## Konfiguracja modelu Gemini (LLM)
-1. Skopiuj plik `.env.example` do `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-2. W pliku `.env` wpisz swój klucz API do Gemini:
-   ```env
-   GEMINI_API_KEY=tu_wstaw_swoj_klucz_api
-   GEMINI_API_URL=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent
-   ```
-3. Klucz API będzie automatycznie używany przez aplikację. Nie musisz go wpisywać ręcznie.
+## Konfiguracja modelu LLM (Bielik lub Gemini)
+1. Przejdź do sekcji **Ustawienia** w aplikacji.
+2. Wybierz model: "Lokalny (Bielik)" lub "Gemini API".
+3. Dla lokalnego modelu podaj adres i nazwę modelu (domyślnie: `http://localhost:1234/v1`, `bielik-4.5b-v3.0-instruct`).
+4. Dla Gemini podaj klucz API i adres endpointu.
+5. Zapisz ustawienia i sprawdź połączenie.
 
 ## Uruchomienie
 1. W terminalu wpisz:
@@ -82,17 +84,38 @@ Prosta aplikacja webowa (działająca lokalnie), która pomaga rejestrować zaku
 ## Struktura projektu
 - `app.py` – główny plik aplikacji
 - `ocr/` – moduł OCR
-- `llm/` – integracja z LLM Gemini
+- `llm/` – integracja z LLM (Bielik/Gemini)
 - `db/` – obsługa bazy danych
-- `static/` – pliki statyczne (np. przykładowe paragony)
-- `.env.example` – wzór pliku z kluczem API
+- `custom_theme.css` – styl aplikacji
+- `requirements.txt` – zależności
+- `.env` – konfiguracja kluczy/modeli
+- `produkty.db` – baza SQLite
+- `app.log` – logi aplikacji
 
-## Przykładowe rozszerzenia
-- Eksport danych do Excela
-- Wersja mobilna
-- Synchronizacja z chmurą
-- Rozbudowana analityka
+## Co jeszcze do dokończenia? (TODO)
+- [ ] Dashboard: dynamiczne metryki i alerty na podstawie realnych danych
+- [ ] Lista produktów: wyświetlanie, filtrowanie, edycja, usuwanie, paginacja
+- [ ] Planowanie posiłków: wybór produktów, aktualizacja ilości, historia
+- [ ] Analityka wydatków: wykresy, statystyki, eksport
+- [ ] Lista zakupów: generowanie, edycja, eksport/drukowanie
+- [ ] Walidacja danych produktu przed zapisem
+- [ ] Lepsza obsługa błędów (OCR, LLM, baza)
+- [ ] Reset bazy danych z potwierdzeniem/backupem
+- [ ] Tryb debugowania/logi w aplikacji
+- [ ] Responsywność i UX na urządzeniach mobilnych
+- [ ] Onboarding dla nowych użytkowników
+- [ ] Przykładowe dane do testów
+- [ ] Pełna polska lokalizacja komunikatów
+
+## Zgłaszanie błędów i sugestii
+- Jeśli napotkasz błąd lub masz pomysł na usprawnienie, zgłoś go przez GitHub Issues lub mailowo do autora.
+- W logu `app.log` znajdziesz szczegóły techniczne błędów.
+
+## Onboarding (pierwsze uruchomienie)
+1. Po uruchomieniu aplikacji przejdź do **Ustawienia** i wybierz model LLM.
+2. Wgraj przykładowy paragon w sekcji **Dodaj paragon (OCR)**.
+3. Przetestuj analizę LLM i edycję produktów.
+4. Przeglądaj produkty, planuj posiłki, analizuj wydatki!
 
 ---
-
 Aplikacja jest w pełni lokalna, prosta w obsłudze i gotowa do rozbudowy. 
