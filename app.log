@@ -682,3 +682,115 @@ NIP 779-10-11-327
   "modelVersion": "gemini-2.0-flash-lite"
 }
 
+2025-05-12 12:41:51,687 INFO: Plik wgrany: 20241209_151934.pdf
+2025-05-12 12:41:51,687 INFO: OCR OK dla pliku 20241209_151934.pdf. Tekst: Podsumowanie zakupów
+
+Kaufland Legionowo
+ul. Zegrzyńska 115
+
+Legionowo
+
+JamarPassataBI0700G
+Czosnek ...
+2025-05-12 12:41:56,797 INFO: Plik wgrany: 20241209_151934.pdf
+2025-05-12 12:41:56,798 INFO: OCR OK dla pliku 20241209_151934.pdf. Tekst: Podsumowanie zakupów
+
+Kaufland Legionowo
+ul. Zegrzyńska 115
+
+Legionowo
+
+JamarPassataBI0700G
+Czosnek ...
+2025-05-12 12:42:15,543 INFO: Prompt do LLM (sklep: Kaufland): Podsumowanie zakupów
+
+Kaufland Legionowo
+ul. Zegrzyńska 115
+
+Legionowo
+
+JamarPassataBI0700G
+Czosnek ...
+2025-05-12 12:42:37,981 INFO: [LLM] Pełna odpowiedź Gemini: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n[\n  {\n    \"produkt\": \"JamarPassataBI0700G\",\n    \"nazwa_znormalizowana\": \"Passata Jamar Bio 700g\",\n    \"kategoria\": \"Produkty spożywcze\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 7.29,\n    \"cena_laczna\": 7.29,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Czosnek szt\",\n    \"nazwa_znormalizowana\": \"Czosnek\",\n    \"kategoria\": \"Warzywa\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 1.37,\n    \"cena_laczna\": 1.37,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Czosnek szt\",\n    \"nazwa_znormalizowana\": \"Czosnek\",\n    \"kategoria\": \"Warzywa\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 1.37,\n    \"cena_laczna\": 1.37,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Imbir kg\",\n    \"nazwa_znormalizowana\": \"Imbir\",\n    \"kategoria\": \"Warzywa\",\n    \"ilosc\": 1,\n    \"jednostka\": \"kg\",\n    \"cena_jednostkowa\": 5.43,\n    \"cena_laczna\": 5.43,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Papryka czerwona kg\",\n    \"nazwa_znormalizowana\": \"Papryka czerwona\",\n    \"kategoria\": \"Warzywa\",\n    \"ilosc\": 1,\n    \"jednostka\": \"kg\",\n    \"cena_jednostkowa\": 6.03,\n    \"cena_laczna\": 6.03,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"K.MakaronSpaghetti\",\n    \"nazwa_znormalizowana\": \"Makaron Spaghetti\",\n    \"kategoria\": \"Makaron\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 3.66,\n    \"cena_laczna\": 3.66,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Cytryny kg\",\n    \"nazwa_znormalizowana\": \"Cytryny\",\n    \"kategoria\": \"Owoce\",\n    \"ilosc\": 1,\n    \"jednostka\": \"kg\",\n    \"cena_jednostkowa\": 1.48,\n    \"cena_laczna\": 1.48,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"OlejWielkopolski1!\",\n    \"nazwa_znormalizowana\": \"Olej Wielkopolski\",\n    \"kategoria\": \"Olej\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 8.24,\n    \"cena_laczna\": 8.24,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"8%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Cukier KryształBiały\",\n    \"nazwa_znormalizowana\": \"Cukier Kryształ Biały\",\n    \"kategoria\": \"Cukier\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 3.20,\n    \"cena_laczna\": 3.20,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"KLC.TortillaPsze320g\",\n    \"nazwa_znormalizowana\": \"Tortilla pszenna 320g\",\n    \"kategoria\": \"Pieczywo\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 3.31,\n    \"cena_laczna\": 3.31,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"KLC.TortillaPsze320g\",\n    \"nazwa_znormalizowana\": \"Tortilla pszenna 320g\",\n    \"kategoria\": \"Pieczywo\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 3.31,\n    \"cena_laczna\": 3.31,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"K.ChlebTost.Maśl500g\",\n    \"nazwa_znormalizowana\": \"Chleb tostowy maślany 500g\",\n    \"kategoria\": \"Pieczywo\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 3.66,\n    \"cena_laczna\": 3.66,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"PaluszkiSól240g\",\n    \"nazwa_znormalizowana\": \"Paluszki sól 240g\",\n    \"kategoria\": \"Przekąski\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 4.39,\n    \"cena_laczna\": 4.39,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Coca Cola 2L\",\n    \"nazwa_znormalizowana\": \"Coca Cola 2L\",\n    \"kategoria\": \"Napoje\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 9.06,\n    \"cena_laczna\": 9.06,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"23%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"K.MasłoExtra200g\",\n    \"nazwa_znormalizowana\": \"Masło extra 200g\",\n    \"kategoria\": \"Nabiał\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 7.78,\n    \"cena_laczna\": 7.78,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"8%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Skyr naturalny 450g\",\n    \"nazwa_znormalizowana\": \"Skyr naturalny 450g\",\n    \"kategoria\": \"Nabiał\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 6.40,\n    \"cena_laczna\": 6.40,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Skyr naturalny 450g\",\n    \"nazwa_znormalizowana\": \"Skyr naturalny 450g\",\n    \"kategoria\": \"Nabiał\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 6.40,\n    \"cena_laczna\": 6.40,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"SerBursztyn10Ogtarty\",\n    \"nazwa_znormalizowana\": \"Ser Bursztyn 10O g tarty\",\n    \"kategoria\": \"Nabiał\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 6.23,\n    \"cena_laczna\": 6.23,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"K. Jaja M10\",\n    \"nazwa_znormalizowana\": \"Jaja M 10 szt.\",\n    \"kategoria\": \"Jajka\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 10.07,\n    \"cena_laczna\": 10.07,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"UHT bezLaktozy1,5%1L\",\n    \"nazwa_znormalizowana\": \"Mleko UHT bez laktozy 1,5% 1L\",\n    \"kategoria\": \"Nabiał\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 3.93,\n    \"cena_laczna\": 3.93,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"5%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"K.BitaŚmiet20%250ml\",\n    \"nazwa_znormalizowana\": \"Bita śmietana 20% 250ml\",\n    \"kategoria\": \"Nabiał\",\n    \"ilosc\": 1,\n    \"jednostka\": \"szt.\",\n    \"cena_jednostkowa\": 6.68,\n    \"cena_laczna\": 6.68,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"09.12.2024\",\n    \"sklep\": \"Kaufland\",\n    \"zamrozony\": false,\n    \"rabat\": 0,\n    \"kategoria_podatkowa\": \"8%\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  }\n]\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.0063483312670626164
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 988,
+    "candidatesTokenCount": 4035,
+    "totalTokenCount": 5023,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 988
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 4035
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash-lite"
+}
+
+2025-05-12 12:47:19,976 INFO: Plik wgrany: receipt.pdf
+2025-05-12 12:47:19,977 INFO: OCR OK dla pliku receipt.pdf. Tekst: Sklep 3218 TARGOWA 4
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+...
+2025-05-12 12:47:28,819 INFO: Prompt do LLM (sklep: Biedronka): Sklep 3218 TARGOWA 4
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+...
+2025-05-12 12:47:42,265 INFO: [LLM] Pełna odpowiedź Gemini: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n[\n  {\n    \"produkt\": \"Mleko UHT 1,5 1I\",\n    \"nazwa_znormalizowana\": \"Mleko UHT 1,5l\",\n    \"kategoria\": \"Mleko i produkty mleczne\",\n    \"ilosc\": 1.0,\n    \"jednostka\": \"l\",\n    \"cena_jednostkowa\": 3.29,\n    \"cena_laczna\": 3.29,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"c\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"PomkKroNaszSpiż240g\",\n    \"nazwa_znormalizowana\": \"Pomidory krojone w sosie własnym 240g\",\n    \"kategoria\": \"Warzywa i przetwory\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 2.99,\n    \"cena_laczna\": 2.99,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"c\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"PomKroNaszSpiż240g\",\n    \"nazwa_znormalizowana\": \"Pomidory krojone w sosie własnym 240g\",\n    \"kategoria\": \"Warzywa i przetwory\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 2.99,\n    \"cena_laczna\": 2.99,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"c\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Jogurt Nat 190 200g\",\n    \"nazwa_znormalizowana\": \"Jogurt naturalny 200g\",\n    \"kategoria\": \"Nabiał\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 1.05,\n    \"cena_laczna\": 1.05,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"c\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Jogurt Nat 190 200g\",\n    \"nazwa_znormalizowana\": \"Jogurt naturalny 200g\",\n    \"kategoria\": \"Nabiał\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 1.05,\n    \"cena_laczna\": 1.05,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"c\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"PaprykaOstraKamis16\",\n    \"nazwa_znormalizowana\": \"Papryka ostra Kamis\",\n    \"kategoria\": \"Przyprawy\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 1.99,\n    \"cena_laczna\": 1.99,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"b\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 90\n  },\n  {\n    \"produkt\": \"SoczewicaPloNa500g\",\n    \"nazwa_znormalizowana\": \"Soczewica 500g\",\n    \"kategoria\": \"Produkty suche\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 5.86,\n    \"cena_laczna\": 5.86,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"e\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"WafelEstellaDes50g\",\n    \"nazwa_znormalizowana\": \"Wafel Estella 50g\",\n    \"kategoria\": \"Słodycze\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 1.19,\n    \"cena_laczna\": 1.19,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"e\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"SerTwarPółtłu250g\",\n    \"nazwa_znormalizowana\": \"Ser twarogowy półtłusty 250g\",\n    \"kategoria\": \"Nabiał\",\n    \"ilosc\": 1.0,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 4.05,\n    \"cena_laczna\": 4.05,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": null,\n    \"status\": \"dostępny\",\n    \"pewnosc\": 80\n  },\n  {\n    \"produkt\": \"MarchewLuz\",\n    \"nazwa_znormalizowana\": \"Marchew luz\",\n    \"kategoria\": \"Warzywa\",\n    \"ilosc\": 0.365,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 3.69,\n    \"cena_laczna\": 1.35,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"g\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Papryka \u003eiodka\",\n    \"nazwa_znormalizowana\": \"Papryka słodka\",\n    \"kategoria\": \"Warzywa\",\n    \"ilosc\": 0.220,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 13.99,\n    \"cena_laczna\": 3.08,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"c\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Cebula Żółta Luz\",\n    \"nazwa_znormalizowana\": \"Cebula Żółta luz\",\n    \"kategoria\": \"Warzywa\",\n    \"ilosc\": 0.455,\n    \"jednostka\": null,\n    \"cena_jednostkowa\": 3.49,\n    \"cena_laczna\": 1.59,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"c\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  }\n]\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.0075957228266218795
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1070,
+    "candidatesTokenCount": 2411,
+    "totalTokenCount": 3481,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1070
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 2411
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash-lite"
+}
+

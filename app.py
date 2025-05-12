@@ -162,6 +162,30 @@ def render_add_receipt():
             log_event(f"Błąd podczas przetwarzania pliku: {str(e)}")
 
 # --- 4. Funkcja do przeglądania oczekujących paragonów ---
+def aggregate_products(products):
+    """
+    Agreguje produkty o tej samej znormalizowanej nazwie i jednostce (sumuje ilość, rabat, cenę łączną).
+    Pozostałe pola bierze z pierwszego wystąpienia.
+    Zabezpieczenie: jeśli pole jest None, traktuj jako pusty string.
+    """
+    aggregated = {}
+    for prod in products:
+        nazwa = str(prod.get("nazwa_znormalizowana") or "").strip().lower()
+        jednostka = str(prod.get("jednostka") or "").strip().lower()
+        key = (nazwa, jednostka)
+        if key in aggregated:
+            aggregated[key]["ilosc"] += float(prod.get("ilosc", 0))
+            aggregated[key]["cena_laczna"] += float(prod.get("cena_laczna", 0))
+            aggregated[key]["rabat"] += float(prod.get("rabat", 0))
+        else:
+            # Kopiujemy produkt, żeby nie nadpisać oryginału
+            aggregated[key] = prod.copy()
+            # Upewniamy się, że liczby są float
+            aggregated[key]["ilosc"] = float(prod.get("ilosc", 0))
+            aggregated[key]["cena_laczna"] = float(prod.get("cena_laczna", 0))
+            aggregated[key]["rabat"] = float(prod.get("rabat", 0))
+    return list(aggregated.values())
+
 def render_pending_receipts():
     st.title("Paragony oczekujące na przetworzenie")
     st.markdown("""
@@ -171,6 +195,7 @@ def render_pending_receipts():
     - Edytuj produkty: nazwa, ilość, data ważności, ceny, rabat.
     - Rabat nie jest produktem! Jeśli LLM wykryje rabat jako produkt, usuń go ręcznie.
     - Wartości ujemne są automatycznie zamieniane na zero.
+    - Produkty o tej samej nazwie i jednostce są sumowane przed zapisem do bazy.
     """)
     receipts = get_pending_receipts()
     if not receipts:
@@ -277,7 +302,10 @@ def render_pending_receipts():
             # 5. Zapisz produkty do bazy
             if st.button("Zapisz wszystkie produkty do bazy", key=f"save_all_{receipt_id}"):
                 dodane = 0
-                for prod in st.session_state[key]:
+                # AGREGACJA przed zapisem
+                products_to_save = aggregate_products(st.session_state[key])
+                st.info(f"Zagregowano {len(st.session_state[key])} pozycji do {len(products_to_save)} unikalnych produktów.")
+                for prod in products_to_save:
                     try:
                         add_product(prod)
                         dodane += 1
