@@ -31,7 +31,18 @@ def log_event(msg):
 def extract_products_from_receipt(text, shop=None):
     """
     Wysyła tekst paragonu do wybranego modelu LLM (lokalny Bielik lub Gemini) i zwraca listę produktów.
+    Rabaty, kupony, zniżki, upusty NIE są produktami i nie mogą być zwracane jako osobne produkty.
+    Rabat należy przypisać do produktu, jeśli występuje.
     """
+    def filter_out_discounts(products):
+        # Filtruje produkty, których nazwa sugeruje rabat, kupon, zniżkę, upust, promocję
+        blacklist = ["rabat", "kupon", "zniżka", "upust", "promocja", "voucher", "bon", "obniżka", "zniż", "discount", "coupon"]
+        filtered = []
+        for prod in products:
+            nazwa = (prod.get("nazwa_znormalizowana") or prod.get("produkt") or "").lower()
+            if not any(word in nazwa for word in blacklist):
+                filtered.append(prod)
+        return filtered
     if LLM_TYPE == 'local':
         if OpenAI is None:
             raise ImportError("openai nie jest zainstalowane. Dodaj 'openai' do requirements.txt i zainstaluj.")
@@ -44,6 +55,7 @@ def extract_products_from_receipt(text, shop=None):
             Przeanalizuj poniższy tekst z paragonu sklepowego i zwróć listę produktów w formacie JSON.
             Dla każdego produktu wyodrębnij: nazwę (tak jak na paragonie), znormalizowaną nazwę (bardziej czytelną),
             ilość, jednostkę, kategorię produktu, cenę jednostkową, cenę łączną, rabat (jeśli jest).
+            RABAT, KUPON, ZNIŻKA, UPUST, PROMOCJA NIE SĄ PRODUKTAMI i nie mogą być zwracane jako osobne produkty. Rabat należy przypisać do produktu, jeśli występuje.
             Format odpowiedzi powinien być tablicą obiektów JSON, każdy obiekt z polami:
             {
                 "nazwa": "nazwa z paragonu",
@@ -61,6 +73,7 @@ def extract_products_from_receipt(text, shop=None):
                 "zamrozony": false,
                 "pewnosc": liczba od 0 do 1
             }
+            NIE ZWRACAJ rabatów, kuponów, zniżek, upustów, promocji jako osobnych produktów!
             """
             if shop:
                 system_prompt += f"\nParagon jest ze sklepu: {shop}."
@@ -94,7 +107,7 @@ def extract_products_from_receipt(text, shop=None):
                     product["zamrozony"] = False
                 if "pewnosc" not in product:
                     product["pewnosc"] = 0.8
-            return products
+            return filter_out_discounts(products)
         except Exception as e:
             log_event(f"[LLM] Błąd lokalnego LLM: {e}")
             return []
@@ -105,6 +118,7 @@ def extract_products_from_receipt(text, shop=None):
         prompt = f"""
         Odczytaj z poniższego tekstu paragonu listę produktów, ich ilości, ceny jednostkowe, rabaty, jednostki miary, sklep, datę zakupu.
         Sklep: {shop}
+        UWAGA: Rabaty, kupony, zniżki, upusty, promocje NIE są produktami i nie mogą być zwracane jako osobne produkty. Rabat należy przypisać do produktu, jeśli występuje.
         Uwzględnij specyfikę sklepu (Lidl, Kaufland, Biedronka):
         - Rozpoznawaj kody promocji, kategorie podatkowe, produkty wagowe.
         - Normalizuj nazwy produktów (np. 'PomKroNaszSpiz240g' → 'Pomidory krojone w sosie własnym 240g').
@@ -112,6 +126,7 @@ def extract_products_from_receipt(text, shop=None):
         - Wyodrębnij ilość i jednostkę miary z różnych formatów (np. 2×1,79; 0.365 × 3,69).
         - Oznacz rabaty i promocje.
         - Dla każdej pozycji podaj ocenę pewności rozpoznania (0-100%).
+        NIE ZWRACAJ rabatów, kuponów, zniżek, upustów, promocji jako osobnych produktów!
         Zwróć dane w formacie JSON:
         [
           {{
@@ -159,7 +174,7 @@ def extract_products_from_receipt(text, shop=None):
                             prod['data_zakupu'] = datetime.now().strftime('%Y-%m-%d')
                         if not prod.get('data_waznosci') or prod.get('data_waznosci') in [None, '', 'null']:
                             prod['data_waznosci'] = None
-                    return products
+                    return filter_out_discounts(products)
                 else:
                     log_event("[LLM] Brak kandydatów w odpowiedzi Gemini.")
                     return []

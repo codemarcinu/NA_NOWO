@@ -641,3 +641,44 @@ NIP 779-10-11-327
   "modelVersion": "gemini-2.0-flash-lite"
 }
 
+2025-05-12 12:15:34,272 INFO: Prompt do LLM (sklep: Biedronka): Sklep 3218 TARGOWA 4
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+...
+2025-05-12 12:15:49,082 INFO: [LLM] Pełna odpowiedź Gemini: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n[\n  {\n    \"produkt\": \"Mleko UHT 1,5 1I c\",\n    \"nazwa_znormalizowana\": \"Mleko UHT 1.5l\",\n    \"kategoria\": \"Mleko\",\n    \"ilosc\": 1.0,\n    \"jednostka\": \"l\",\n    \"cena_jednostkowa\": 3.29,\n    \"cena_laczna\": 3.29,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"C\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"PomkKroNaszSpiż240g c\",\n    \"nazwa_znormalizowana\": \"Pomidory krojone w sosie własnym 240g\",\n    \"kategoria\": \"Warzywa w puszce\",\n    \"ilosc\": 1.0,\n    \"jednostka\": \"szt\",\n    \"cena_jednostkowa\": 2.99,\n    \"cena_laczna\": 2.99,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"C\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"PomKroNaszSpiż240g c\",\n    \"nazwa_znormalizowana\": \"Pomidory krojone w sosie własnym 240g\",\n    \"kategoria\": \"Warzywa w puszce\",\n    \"ilosc\": 1.0,\n    \"jednostka\": \"szt\",\n    \"cena_jednostkowa\": 2.99,\n    \"cena_laczna\": 2.99,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"C\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Jogurt Nat 190 200g c\",\n    \"nazwa_znormalizowana\": \"Jogurt naturalny 200g\",\n    \"kategoria\": \"Nabiał\",\n    \"ilosc\": 1.0,\n    \"jednostka\": \"szt\",\n    \"cena_jednostkowa\": 1.05,\n    \"cena_laczna\": 1.05,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"C\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Jogurt Nat 190 200g c\",\n    \"nazwa_znormalizowana\": \"Jogurt naturalny 200g\",\n    \"kategoria\": \"Nabiał\",\n    \"ilosc\": 1.0,\n    \"jednostka\": \"szt\",\n    \"cena_jednostkowa\": 1.05,\n    \"cena_laczna\": 1.05,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"C\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"PaprykaOstraKamis16 B\",\n    \"nazwa_znormalizowana\": \"Papryka ostra Kamis\",\n    \"kategoria\": \"Przyprawy\",\n    \"ilosc\": 1.0,\n    \"jednostka\": \"szt\",\n    \"cena_jednostkowa\": 1.99,\n    \"cena_laczna\": 1.99,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"B\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"SoczewicaPloNa500g [e\",\n    \"nazwa_znormalizowana\": \"Soczewica 500g\",\n    \"kategoria\": \"Produkty suche\",\n    \"ilosc\": 1.0,\n    \"jednostka\": \"szt\",\n    \"cena_jednostkowa\": 5.86,\n    \"cena_laczna\": 5.86,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"e\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"WafelEstellaDes50g [e\",\n    \"nazwa_znormalizowana\": \"Wafel Estella Deser 50g\",\n    \"kategoria\": \"Słodycze\",\n    \"ilosc\": 1.0,\n    \"jednostka\": \"szt\",\n    \"cena_jednostkowa\": 1.19,\n    \"cena_laczna\": 1.19,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"e\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"SerTwarPółtłu250g |=\",\n    \"nazwa_znormalizowana\": \"Ser Twarogowy półtłusty 250g\",\n    \"kategoria\": \"Nabiał\",\n    \"ilosc\": 1.0,\n    \"jednostka\": \"szt\",\n    \"cena_jednostkowa\": 4.05,\n    \"cena_laczna\": 4.05,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"|=\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"MarchewLuz G\",\n    \"nazwa_znormalizowana\": \"Marchew luz\",\n    \"kategoria\": \"Warzywa\",\n    \"ilosc\": 0.365,\n    \"jednostka\": \"kg\",\n    \"cena_jednostkowa\": 3.69,\n    \"cena_laczna\": 1.35,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"G\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Rabat\",\n    \"nazwa_znormalizowana\": \"Rabat\",\n    \"kategoria\": \"Rabat\",\n    \"ilosc\": 1.0,\n    \"jednostka\": \"szt\",\n    \"cena_jednostkowa\": -0.62,\n    \"cena_laczna\": -0.62,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": null,\n    \"status\": \"dostępny\",\n    \"pewnosc\": 100\n  },\n  {\n    \"produkt\": \"rapryka \u003eiodka c\",\n    \"nazwa_znormalizowana\": \"Papryka słodka\",\n    \"kategoria\": \"Warzywa\",\n    \"ilosc\": 0.220,\n    \"jednostka\": \"kg\",\n    \"cena_jednostkowa\": 13.99,\n    \"cena_laczna\": 3.08,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"C\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  },\n  {\n    \"produkt\": \"Cebula Żółta Luz C\",\n    \"nazwa_znormalizowana\": \"Cebula Żółta Luz\",\n    \"kategoria\": \"Warzywa\",\n    \"ilosc\": 0.455,\n    \"jednostka\": \"kg\",\n    \"cena_jednostkowa\": 3.49,\n    \"cena_laczna\": 1.59,\n    \"data_waznosci\": null,\n    \"data_zakupu\": \"13.01.2025\",\n    \"sklep\": \"Biedronka\",\n    \"zamrozony\": false,\n    \"rabat\": 0.0,\n    \"kategoria_podatkowa\": \"C\",\n    \"status\": \"dostępny\",\n    \"pewnosc\": 95\n  }\n]\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.0086150810008740614
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 993,
+    "candidatesTokenCount": 2620,
+    "totalTokenCount": 3613,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 993
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 2620
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash-lite"
+}
+
