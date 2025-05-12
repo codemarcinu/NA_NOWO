@@ -164,6 +164,14 @@ def render_add_receipt():
 # --- 4. Funkcja do przeglądania oczekujących paragonów ---
 def render_pending_receipts():
     st.title("Paragony oczekujące na przetworzenie")
+    st.markdown("""
+    **Jak działa ten moduł?**
+    - Sprawdź tekst OCR, popraw jeśli trzeba.
+    - Kliknij "Analizuj produkty przez LLM".
+    - Edytuj produkty: nazwa, ilość, data ważności, ceny, rabat.
+    - Rabat nie jest produktem! Jeśli LLM wykryje rabat jako produkt, usuń go ręcznie.
+    - Wartości ujemne są automatycznie zamieniane na zero.
+    """)
     receipts = get_pending_receipts()
     if not receipts:
         st.info("Brak paragonów oczekujących na przetworzenie.")
@@ -205,7 +213,7 @@ def render_pending_receipts():
             except Exception as e:
                 st.error(f"Błąd analizy LLM: {str(e)}")
                 log_event(f"Błąd LLM: {str(e)}")
-        # 3. Edycja produktów (proste pola)
+        # 3. Edycja produktów (proste pola, obsługa rabatów i cen)
         key = f"products_{receipt_id}"
         if key in st.session_state:
             st.markdown("---")
@@ -213,15 +221,32 @@ def render_pending_receipts():
             products = st.session_state[key]
             for i, prod in enumerate(products):
                 st.markdown(f"#### Produkt #{i+1}")
-                cols = st.columns(4)
+                cols = st.columns(6)
                 with cols[0]:
                     prod["nazwa_znormalizowana"] = st.text_input(f"Nazwa", value=prod.get("nazwa_znormalizowana", ""), key=f"nazwa_{receipt_id}_{i}")
                 with cols[1]:
-                    prod["ilosc"] = st.number_input(f"Ilość", value=float(prod.get("ilosc", 1)), min_value=0.0, key=f"ilosc_{receipt_id}_{i}")
+                    prod["ilosc"] = st.number_input(f"Ilość", value=max(0.0, float(prod.get("ilosc", 1))), min_value=0.0, key=f"ilosc_{receipt_id}_{i}")
                 with cols[2]:
                     prod["data_waznosci"] = st.text_input(f"Data ważności (opcjonalnie)", value=prod.get("data_waznosci", ""), key=f"dataw_{receipt_id}_{i}")
+                # Ceny i rabaty
                 with cols[3]:
-                    prod["cena_laczna"] = st.number_input(f"Cena (opcjonalnie)", value=float(prod.get("cena_laczna", 0)), min_value=0.0, key=f"cena_{receipt_id}_{i}")
+                    cena_jedn_przed = float(prod.get("cena_jednostkowa_przed", prod.get("cena_jednostkowa", 0)))
+                    if cena_jedn_przed < 0:
+                        st.warning("Cena jednostkowa przed rabatem była ujemna – poprawiono na 0.")
+                    prod["cena_jednostkowa_przed"] = st.number_input(f"Cena jedn. przed rabatem", value=max(0.0, cena_jedn_przed), min_value=0.0, key=f"cena_jedn_przed_{receipt_id}_{i}")
+                with cols[4]:
+                    rabat = float(prod.get("rabat", 0))
+                    if rabat < 0:
+                        st.warning("Rabat był ujemny – poprawiono na 0.")
+                    prod["rabat"] = st.number_input(f"Rabat", value=max(0.0, rabat), min_value=0.0, key=f"rabat_{receipt_id}_{i}")
+                with cols[5]:
+                    # Cena po rabacie = cena przed - rabat
+                    cena_po = max(0.0, prod["cena_jednostkowa_przed"] - prod["rabat"])
+                    prod["cena_jednostkowa"] = cena_po
+                    st.number_input(f"Cena jedn. po rabacie", value=cena_po, min_value=0.0, key=f"cena_jedn_po_{receipt_id}_{i}", disabled=True)
+                # Cena łączna (po rabacie)
+                prod["cena_laczna"] = max(0.0, float(prod.get("cena_laczna", prod["cena_jednostkowa"] * prod["ilosc"])))
+                st.number_input(f"Cena łączna (po rabacie)", value=prod["cena_laczna"], min_value=0.0, key=f"cena_laczna_{receipt_id}_{i}", disabled=True)
             # 4. Dodaj produkt ręcznie
             st.markdown("---")
             st.markdown("#### Dodaj produkt ręcznie (jeśli czegoś brakuje)")
@@ -229,7 +254,12 @@ def render_pending_receipts():
                 nazwa = st.text_input("Nazwa produktu")
                 ilosc = st.number_input("Ilość", min_value=0.0, value=1.0)
                 dataw = st.text_input("Data ważności (opcjonalnie)")
-                cena = st.number_input("Cena (opcjonalnie)", min_value=0.0, value=0.0)
+                cena_jedn_przed = st.number_input("Cena jedn. przed rabatem", min_value=0.0, value=0.0)
+                rabat = st.number_input("Rabat", min_value=0.0, value=0.0)
+                cena_jedn_po = max(0.0, cena_jedn_przed - rabat)
+                st.number_input("Cena jedn. po rabacie", value=cena_jedn_po, min_value=0.0, disabled=True)
+                cena_laczna = max(0.0, cena_jedn_po * ilosc)
+                st.number_input("Cena łączna (po rabacie)", value=cena_laczna, min_value=0.0, disabled=True)
                 submit_manual = st.form_submit_button("Dodaj produkt")
                 if submit_manual and nazwa:
                     manual_prod = {
@@ -237,7 +267,10 @@ def render_pending_receipts():
                         "nazwa_znormalizowana": nazwa,
                         "ilosc": ilosc,
                         "data_waznosci": dataw,
-                        "cena_laczna": cena
+                        "cena_jednostkowa_przed": cena_jedn_przed,
+                        "rabat": rabat,
+                        "cena_jednostkowa": cena_jedn_po,
+                        "cena_laczna": cena_laczna
                     }
                     st.session_state[key].append(manual_prod)
                     st.success(f"Dodano produkt: {nazwa}")
