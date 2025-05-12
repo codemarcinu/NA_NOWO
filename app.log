@@ -986,3 +986,19 @@ Ba...
 2025-05-12 14:14:29,532 INFO: [ZAPIS][BŁĄD] table produkty has no column named nazwa_znormalizowana | Produkt: {'nazwa': 'HALLS cukierki mięt.', 'nazwa_znormalizowana': 'Cukierki miętowe HALLS', 'ilosc': 1.0, 'jednostka': 'szt.', 'kategoria': 'Produkty spożywcze i napoje bezalkoholowe', 'cena_jednostkowa': 2.49, 'cena_laczna': 2.49, 'rabat': 0.0, 'sklep': 'Lidl', 'data_zakupu': '2024-11-16', 'status': 'dostępny', 'kategoria_podatkowa': 'A', 'zamrozony': False, 'pewnosc': 1, 'data_waznosci': '', 'cena_jednostkowa_przed': 2.49}
 2025-05-12 14:14:29,532 INFO: [ZAPIS] Próbuję dodać produkt: {'nazwa': 'Heineken 8% piwo', 'nazwa_znormalizowana': 'Piwo Heinecken ', 'ilosc': 10.0, 'jednostka': 'szt.', 'kategoria': 'Napoje alkoholowe i bezalkoholowe', 'cena_jednostkowa': 0.0, 'cena_laczna': 73.24, 'rabat': 23.0, 'sklep': 'Lidl', 'data_zakupu': '2024-11-16', 'status': 'dostępny', 'kategoria_podatkowa': 'A', 'zamrozony': False, 'pewnosc': 1, 'data_waznosci': '', 'cena_jednostkowa_przed': 4.59}
 2025-05-12 14:14:29,533 INFO: [ZAPIS][BŁĄD] table produkty has no column named nazwa_znormalizowana | Produkt: {'nazwa': 'Heineken 8% piwo', 'nazwa_znormalizowana': 'Piwo Heinecken ', 'ilosc': 10.0, 'jednostka': 'szt.', 'kategoria': 'Napoje alkoholowe i bezalkoholowe', 'cena_jednostkowa': 0.0, 'cena_laczna': 73.24, 'rabat': 23.0, 'sklep': 'Lidl', 'data_zakupu': '2024-11-16', 'status': 'dostępny', 'kategoria_podatkowa': 'A', 'zamrozony': False, 'pewnosc': 1, 'data_waznosci': '', 'cena_jednostkowa_przed': 4.59}
+2025-05-12 14:42:34,727 INFO: Plik wgrany: receipt.pdf
+2025-05-12 14:42:34,727 INFO: OCR OK dla pliku receipt.pdf. Tekst: Sklep 3218 TARGOWA 4
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+...
+2025-05-12 14:42:42,412 INFO: Prompt do LLM (sklep: Biedronka): Sklep 3218 TARGOWA 4
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+...
+2025-05-12 14:52:42,703 INFO: Retrying request to /chat/completions in 0.462255 seconds
+2025-05-12 15:02:23,254 INFO: HTTP Request: POST http://192.168.0.167:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2025-05-12 15:02:23,256 INFO: [LLM] Błąd lokalnego LLM: Expecting value: line 1 column 1 (char 0)

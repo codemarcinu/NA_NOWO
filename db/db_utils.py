@@ -1,12 +1,13 @@
 import sqlite3
 from contextlib import closing
 from datetime import datetime, timedelta
+import logging
 
 DB_PATH = 'produkty.db'
 
 def init_db():
     """
-    Tworzy bazę danych i tabele, jeśli nie istnieją.
+    Tworzy bazę danych i tabele, jeśli nie istnieją. Dodaje brakujące kolumny i indeksy.
     """
     with closing(sqlite3.connect(DB_PATH)) as conn:
         with conn:
@@ -31,6 +32,20 @@ def init_db():
                     pewnosc INTEGER
                 )
             ''')
+            # Dodaj brakującą kolumnę nazwa_znormalizowana, jeśli nie istnieje
+            try:
+                conn.execute("SELECT nazwa_znormalizowana FROM produkty LIMIT 1")
+            except sqlite3.OperationalError:
+                conn.execute("ALTER TABLE produkty ADD COLUMN nazwa_znormalizowana TEXT")
+                print("Dodano brakującą kolumnę 'nazwa_znormalizowana'")
+            # Dodaj indeksy na najczęściej wyszukiwane kolumny
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_produkty_nazwa ON produkty(nazwa)')
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_produkty_nazwa_znormalizowana ON produkty(nazwa_znormalizowana)')
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_produkty_kategoria ON produkty(kategoria)')
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_produkty_data_waznosci ON produkty(data_waznosci)')
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_produkty_sklep ON produkty(sklep)')
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_produkty_data_zakupu ON produkty(data_zakupu)')
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_produkty_status ON produkty(status)')
             # Tabela paragonów oczekujących
             conn.execute('''
                 CREATE TABLE IF NOT EXISTS paragony_oczekujace (
@@ -42,12 +57,79 @@ def init_db():
                     data_dodania TEXT
                 )
             ''')
+            # Indeksy dla paragonów
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_paragony_sklep ON paragony_oczekujace(sklep)')
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_paragony_data_dodania ON paragony_oczekujace(data_dodania)')
+
+def normalize_date(date_str):
+    """Próbuje znormalizować datę do formatu YYYY-MM-DD."""
+    if not date_str:
+        return None
+    formats = [
+        '%Y-%m-%d', '%d.%m.%Y', '%d-%m-%Y', '%d/%m/%Y', '%Y.%m.%d', '%Y/%m/%d'
+    ]
+    for fmt in formats:
+        try:
+            date_obj = datetime.strptime(date_str, fmt)
+            return date_obj.strftime('%Y-%m-%d')
+        except ValueError:
+            continue
+    return None
+
+def validate_product(product):
+    """
+    Waliduje dane produktu przed zapisem do bazy.
+    Sprawdza wymagane pola, typy, daty, liczby, normalizuje daty.
+    Zwraca listę błędów (jeśli pusta, produkt jest OK).
+    """
+    errors = []
+    # Wymagane pola
+    required_fields = ['nazwa', 'ilosc', 'kategoria', 'sklep', 'data_zakupu']
+    for field in required_fields:
+        if field not in product or not product[field]:
+            errors.append(f"Brak wymaganego pola: {field}")
+    # Typy liczbowe
+    for field in ['ilosc', 'cena_jednostkowa', 'cena_laczna', 'rabat']:
+        if field in product and product[field] is not None:
+            try:
+                product[field] = float(product[field])
+                if product[field] < 0:
+                    errors.append(f"Wartość dla pola '{field}' nie może być ujemna: {product[field]}")
+            except (ValueError, TypeError):
+                errors.append(f"Niepoprawna wartość dla pola '{field}': {product[field]}")
+    # Normalizacja i walidacja dat
+    if 'data_zakupu' in product and product['data_zakupu']:
+        normalized = normalize_date(product['data_zakupu'])
+        if normalized:
+            product['data_zakupu'] = normalized
+        else:
+            errors.append(f"Niepoprawny format daty zakupu: {product['data_zakupu']}")
+    if 'data_waznosci' in product and product['data_waznosci']:
+        normalized = normalize_date(product['data_waznosci'])
+        if normalized:
+            product['data_waznosci'] = normalized
+        else:
+            errors.append(f"Niepoprawny format daty ważności: {product['data_waznosci']}")
+    # Data ważności nie może być wcześniejsza niż data zakupu
+    if product.get('data_zakupu') and product.get('data_waznosci'):
+        try:
+            if product['data_waznosci'] < product['data_zakupu']:
+                errors.append("Data ważności nie może być wcześniejsza niż data zakupu")
+        except:
+            pass
+    return errors
 
 def add_product(prod):
     """
-    Dodaje produkt do bazy danych.
+    Dodaje produkt do bazy danych po walidacji.
     prod: słownik z danymi produktu
     """
+    # Walidacja danych
+    errors = validate_product(prod)
+    if errors:
+        error_msg = "; ".join(errors)
+        logging.error(f"[ZAPIS][BŁĄD] Błędy walidacji: {error_msg}")
+        raise ValueError(f"Błędy walidacji: {error_msg}")
     with closing(sqlite3.connect(DB_PATH)) as conn:
         with conn:
             conn.execute('''

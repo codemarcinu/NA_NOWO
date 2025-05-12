@@ -12,6 +12,16 @@ import requests
 import re
 import jsonschema
 
+def clean_json_markdown(text):
+    """
+    Usuwa znaczniki Markdown (```json ... ```) z odpowiedzi LLM, jeśli występują.
+    """
+    # Usuwa blok ```json ... ``` lub ``` ... ```
+    text = re.sub(r'^```json\s*', '', text.strip(), flags=re.MULTILINE)
+    text = re.sub(r'^```\s*', '', text.strip(), flags=re.MULTILINE)
+    text = re.sub(r'```$', '', text.strip(), flags=re.MULTILINE)
+    return text.strip()
+
 # Wczytaj zmienne środowiskowe z pliku .env
 load_dotenv()
 LLM_TYPE = os.getenv('LLM_TYPE', 'local')
@@ -86,12 +96,8 @@ def extract_products_from_receipt(text, shop=None):
                 temperature=0.2
             )
             response_text = response.choices[0].message.content
-            # Szukamy JSON w odpowiedzi
-            json_match = re.search(r'```json\n([\s\S]*?)\n```', response_text)
-            if json_match:
-                products_json = json_match.group(1)
-            else:
-                products_json = response_text
+            # Usuwamy znaczniki Markdown przed parsowaniem JSON
+            products_json = clean_json_markdown(response_text)
             products = json.loads(products_json)
             # Uzupełnianie brakujących pól
             from datetime import datetime
@@ -162,9 +168,8 @@ def extract_products_from_receipt(text, shop=None):
                 candidates = response.json().get('candidates', [])
                 if candidates:
                     text_response = candidates[0]['content']['parts'][0]['text']
-                    text_response = re.sub(r'^```json\s*', '', text_response.strip(), flags=re.MULTILINE)
-                    text_response = re.sub(r'```$', '', text_response.strip(), flags=re.MULTILINE)
-                    text_response = text_response.strip()
+                    # Usuwamy znaczniki Markdown przed parsowaniem JSON
+                    text_response = clean_json_markdown(text_response)
                     text_response = re.sub(r',\s*([}\]])', r'\1', text_response)
                     text_response = text_response.replace("'", '"')
                     products = json.loads(text_response)
