@@ -245,7 +245,120 @@ def render_pending_receipts():
 # --- 5. Inne funkcje dla pozostałych widoków ---
 def render_products_list():
     st.title("Lista produktów")
-    st.info("Ten widok jest w trakcie implementacji.")
+    st.markdown("""
+    **Jak korzystać z listy produktów?**
+    - Możesz filtrować produkty po nazwie, sklepie, kategorii, statusie lub dacie ważności.
+    - Kliknij **Edytuj** przy wybranym produkcie, aby zmienić jego dane.
+    - Kliknij **Usuń**, aby usunąć produkt (zostaniesz poproszony o potwierdzenie).
+    """)
+
+    # Pobierz produkty z bazy
+    produkty = get_products()
+    if not produkty:
+        st.info("Brak produktów w bazie. Dodaj produkty przez OCR lub ręcznie.")
+        return
+
+    # Przygotuj DataFrame
+    columns = [
+        "ID", "Nazwa", "Nazwa znormalizowana", "Ilość", "Jednostka", "Kategoria", "Data ważności", "Sklep", "Cena jednostkowa", "Cena łączna", "Rabat", "Data zakupu", "Status", "Kategoria podatkowa", "Zamrożony", "Pewność"
+    ]
+    df = pd.DataFrame(produkty, columns=columns)
+
+    # --- Filtrowanie ---
+    with st.expander("Filtry", expanded=True):
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            nazwa_filter = st.text_input("Filtruj po nazwie:")
+        with col2:
+            sklep_filter = st.text_input("Filtruj po sklepie:")
+        with col3:
+            kategoria_filter = st.text_input("Filtruj po kategorii:")
+        with col4:
+            status_filter = st.text_input("Filtruj po statusie:")
+        # Data ważności (od-do)
+        col5, col6 = st.columns(2)
+        with col5:
+            data_od = st.date_input("Data ważności od:", value=None, key="data_od")
+        with col6:
+            data_do = st.date_input("Data ważności do:", value=None, key="data_do")
+
+    # Zastosuj filtry
+    if nazwa_filter:
+        df = df[df["Nazwa"].str.contains(nazwa_filter, case=False, na=False)]
+    if sklep_filter:
+        df = df[df["Sklep"].str.contains(sklep_filter, case=False, na=False)]
+    if kategoria_filter:
+        df = df[df["Kategoria"].str.contains(kategoria_filter, case=False, na=False)]
+    if status_filter:
+        df = df[df["Status"].str.contains(status_filter, case=False, na=False)]
+    if data_od:
+        df = df[df["Data ważności"].apply(lambda x: x and x >= str(data_od))]
+    if data_do:
+        df = df[df["Data ważności"].apply(lambda x: x and x <= str(data_do))]
+
+    # --- Wyświetlanie tabeli ---
+    st.markdown("### Tabela produktów")
+    st.dataframe(df, use_container_width=True, hide_index=True)
+
+    # --- Edycja i usuwanie ---
+    st.markdown("### Edycja i usuwanie produktów")
+    for idx, row in df.iterrows():
+        with st.expander(f"Produkt: {row['Nazwa']} (ID: {row['ID']})"):
+            st.write("**Szczegóły produktu:**")
+            st.json(row.to_dict(), expanded=False)
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("Edytuj", key=f"edit_{row['ID']}"):
+                    with st.form(f"edit_form_{row['ID']}"):
+                        nazwa = st.text_input("Nazwa", value=row["Nazwa"])
+                        nazwa_znorm = st.text_input("Nazwa znormalizowana", value=row["Nazwa znormalizowana"])
+                        ilosc = st.number_input("Ilość", value=float(row["Ilość"]), min_value=0.0)
+                        jednostka = st.text_input("Jednostka", value=row["Jednostka"])
+                        kategoria = st.text_input("Kategoria", value=row["Kategoria"])
+                        data_waznosci = st.text_input("Data ważności (YYYY-MM-DD)", value=row["Data ważności"] or "")
+                        sklep = st.text_input("Sklep", value=row["Sklep"])
+                        cena_jednostkowa = st.number_input("Cena jednostkowa", value=float(row["Cena jednostkowa"] or 0), min_value=0.0)
+                        cena_laczna = st.number_input("Cena łączna", value=float(row["Cena łączna"] or 0), min_value=0.0)
+                        rabat = st.number_input("Rabat", value=float(row["Rabat"] or 0), min_value=0.0)
+                        data_zakupu = st.text_input("Data zakupu (YYYY-MM-DD)", value=row["Data zakupu"] or "")
+                        status = st.text_input("Status", value=row["Status"] or "")
+                        kategoria_podatkowa = st.text_input("Kategoria podatkowa", value=row["Kategoria podatkowa"] or "")
+                        zamrozony = st.checkbox("Zamrożony", value=bool(row["Zamrożony"]))
+                        pewnosc = st.number_input("Pewność", value=int(row["Pewność"] or 0), min_value=0, max_value=100)
+                        submit = st.form_submit_button("Zapisz zmiany")
+                        if submit:
+                            prod = {
+                                "nazwa": nazwa,
+                                "nazwa_znormalizowana": nazwa_znorm,
+                                "ilosc": ilosc,
+                                "jednostka": jednostka,
+                                "kategoria": kategoria,
+                                "data_waznosci": data_waznosci,
+                                "sklep": sklep,
+                                "cena_jednostkowa": cena_jednostkowa,
+                                "cena_laczna": cena_laczna,
+                                "rabat": rabat,
+                                "data_zakupu": data_zakupu,
+                                "status": status,
+                                "kategoria_podatkowa": kategoria_podatkowa,
+                                "zamrozony": int(zamrozony),
+                                "pewnosc": pewnosc
+                            }
+                            try:
+                                update_product(row["ID"], prod)
+                                st.success("Produkt został zaktualizowany.")
+                                st.rerun()
+                            except Exception as e:
+                                st.error(f"Błąd podczas aktualizacji: {str(e)}")
+            with col2:
+                if st.button("Usuń", key=f"delete_{row['ID']}"):
+                    if st.confirm(f"Czy na pewno chcesz usunąć produkt '{row['Nazwa']}'?"):
+                        try:
+                            delete_product(row["ID"])
+                            st.success("Produkt został usunięty.")
+                            st.rerun()
+                        except Exception as e:
+                            st.error(f"Błąd podczas usuwania: {str(e)}")
 
 def render_meal_planning():
     st.title("Planowanie posiłków")

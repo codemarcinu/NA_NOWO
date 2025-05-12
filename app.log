@@ -506,3 +506,38 @@ ul. Żniwna 5, 62-025 Kostrzyn
 NIP 779-10-11-327
 ...
 2025-05-11 21:43:03,372 INFO: HTTP Request: POST http://192.168.0.167:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2025-05-12 11:45:23,918 INFO: Prompt do LLM (sklep: Biedronka): Sklep 3218 TARGOWA 4
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+...
+2025-05-12 11:45:26,292 INFO: HTTP Request: POST http://192.168.0.167:1234/v1/chat/completions "HTTP/1.1 400 Bad Request"
+2025-05-12 11:45:26,292 INFO: [LLM] Błąd lokalnego LLM: Error code: 400 - {'error': 'The model has crashed without additional information. (Exit code: null)'}
+2025-05-12 11:46:14,990 INFO: Prompt do LLM (sklep: Biedronka): Sklep 3218 TARGOWA 4
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+...
+2025-05-12 11:46:16,349 INFO: HTTP Request: POST http://192.168.0.167:1234/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-05-12 11:46:16,350 INFO: [LLM] Błąd lokalnego LLM: Error code: 404 - {'error': {'message': 'Failed to load model "bielik-4.5b-v3.0-instruct". Error: Failed to load model', 'type': 'invalid_request_error', 'param': 'model', 'code': 'model_not_found'}}
+2025-05-12 11:46:48,826 INFO: Plik wgrany: Obrazek PNG.png
+2025-05-12 11:46:48,826 INFO: OCR OK dla pliku Obrazek PNG.png. Tekst: Lidl sp. z.o0. o. sp. k.
+Poznańska 48, Jankowice
+62-888 Tarnowo Podgórne
+
+www.lidl.pl
+
+2024-11-16
+Ba...
+2025-05-12 11:47:08,364 INFO: Prompt do LLM (sklep: Kaufland): Lidl sp. z.o0. o. sp. k.
+Poznańska 48, Jankowice
+62-888 Tarnowo Podgórne
+
+www.lidl.pl
+
+2024-11-16
+Ba...
+2025-05-12 11:47:09,713 INFO: HTTP Request: POST http://192.168.0.167:1234/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-05-12 11:47:09,714 INFO: [LLM] Błąd lokalnego LLM: Error code: 404 - {'error': {'message': 'Failed to load model "bielik-4.5b-v3.0-instruct". Error: Failed to load model', 'type': 'invalid_request_error', 'param': 'model', 'code': 'model_not_found'}}
