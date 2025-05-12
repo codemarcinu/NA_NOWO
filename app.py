@@ -225,8 +225,7 @@ def render_pending_receipts():
                     except Exception as e:
                         st.error(f"Błąd podglądu PDF: {str(e)}")
         with cols[1]:
-            st.markdown("**Tekst OCR (możesz poprawić przed analizą):**")
-            edited_ocr = st.text_area("", value=tekst_ocr, height=200, key=f"ocr_{receipt_id}")
+            edited_ocr = st.text_area("Tekst OCR (możesz poprawić przed analizą)", value=tekst_ocr, height=200, key=f"ocr_{receipt_id}", label_visibility="collapsed")
         # 2. Analiza LLM
         if st.button("Analizuj produkty przez LLM", key=f"analyze_{receipt_id}"):
             try:
@@ -248,44 +247,45 @@ def render_pending_receipts():
                 st.markdown(f"#### Produkt #{i+1}")
                 cols = st.columns(6)
                 with cols[0]:
-                    prod["nazwa_znormalizowana"] = st.text_input(f"Nazwa", value=prod.get("nazwa_znormalizowana", ""), key=f"nazwa_{receipt_id}_{i}")
+                    prod["nazwa_znormalizowana"] = st.text_input(f"Nazwa produktu", value=prod.get("nazwa_znormalizowana", ""), key=f"nazwa_{receipt_id}_{i}")
                 with cols[1]:
-                    prod["ilosc"] = st.number_input(f"Ilość", value=max(0.0, float(prod.get("ilosc", 1))), min_value=0.0, key=f"ilosc_{receipt_id}_{i}")
+                    # Zabezpieczenie: None -> 0.0
+                    prod["ilosc"] = st.number_input(f"Ilość produktu", value=max(0.0, float(prod.get("ilosc") or 1)), min_value=0.0, key=f"ilosc_{receipt_id}_{i}")
                 with cols[2]:
-                    prod["data_waznosci"] = st.text_input(f"Data ważności (opcjonalnie)", value=prod.get("data_waznosci", ""), key=f"dataw_{receipt_id}_{i}")
+                    prod["data_waznosci"] = st.text_input(f"Data ważności produktu (opcjonalnie)", value=prod.get("data_waznosci", ""), key=f"dataw_{receipt_id}_{i}")
                 # Ceny i rabaty
                 with cols[3]:
-                    cena_jedn_przed = float(prod.get("cena_jednostkowa_przed", prod.get("cena_jednostkowa", 0)))
+                    cena_jedn_przed = float(prod.get("cena_jednostkowa_przed") or prod.get("cena_jednostkowa") or 0)
                     if cena_jedn_przed < 0:
                         st.warning("Cena jednostkowa przed rabatem była ujemna – poprawiono na 0.")
-                    prod["cena_jednostkowa_przed"] = st.number_input(f"Cena jedn. przed rabatem", value=max(0.0, cena_jedn_przed), min_value=0.0, key=f"cena_jedn_przed_{receipt_id}_{i}")
+                    prod["cena_jednostkowa_przed"] = st.number_input(f"Cena jedn. przed rabatem produktu", value=max(0.0, cena_jedn_przed), min_value=0.0, key=f"cena_jedn_przed_{receipt_id}_{i}")
                 with cols[4]:
-                    rabat = float(prod.get("rabat", 0))
+                    rabat = float(prod.get("rabat") or 0)
                     if rabat < 0:
                         st.warning("Rabat był ujemny – poprawiono na 0.")
-                    prod["rabat"] = st.number_input(f"Rabat", value=max(0.0, rabat), min_value=0.0, key=f"rabat_{receipt_id}_{i}")
+                    prod["rabat"] = st.number_input(f"Rabat produktu", value=max(0.0, rabat), min_value=0.0, key=f"rabat_{receipt_id}_{i}")
                 with cols[5]:
                     # Cena po rabacie = cena przed - rabat
                     cena_po = max(0.0, prod["cena_jednostkowa_przed"] - prod["rabat"])
                     prod["cena_jednostkowa"] = cena_po
-                    st.number_input(f"Cena jedn. po rabacie", value=cena_po, min_value=0.0, key=f"cena_jedn_po_{receipt_id}_{i}", disabled=True)
+                    st.number_input(f"Cena jedn. po rabacie produktu", value=cena_po, min_value=0.0, key=f"cena_jedn_po_{receipt_id}_{i}", disabled=True)
                 # Cena łączna (po rabacie)
-                prod["cena_laczna"] = max(0.0, float(prod.get("cena_laczna", prod["cena_jednostkowa"] * prod["ilosc"])))
-                st.number_input(f"Cena łączna (po rabacie)", value=prod["cena_laczna"], min_value=0.0, key=f"cena_laczna_{receipt_id}_{i}", disabled=True)
+                prod["cena_laczna"] = max(0.0, float(prod.get("cena_laczna") or (prod["cena_jednostkowa"] * prod["ilosc"]) or 0))
+                st.number_input(f"Cena łączna produktu (po rabacie)", value=prod["cena_laczna"], min_value=0.0, key=f"cena_laczna_{receipt_id}_{i}", disabled=True)
             # 4. Dodaj produkt ręcznie
             st.markdown("---")
             st.markdown("#### Dodaj produkt ręcznie (jeśli czegoś brakuje)")
             with st.form(f"manual_add_{receipt_id}"):
-                nazwa = st.text_input("Nazwa produktu")
-                ilosc = st.number_input("Ilość", min_value=0.0, value=1.0)
-                dataw = st.text_input("Data ważności (opcjonalnie)")
-                cena_jedn_przed = st.number_input("Cena jedn. przed rabatem", min_value=0.0, value=0.0)
-                rabat = st.number_input("Rabat", min_value=0.0, value=0.0)
+                nazwa = st.text_input("Nazwa produktu (ręcznie)")
+                ilosc = st.number_input("Ilość produktu (ręcznie)", min_value=0.0, value=1.0)
+                dataw = st.text_input("Data ważności produktu (opcjonalnie, ręcznie)")
+                cena_jedn_przed = st.number_input("Cena jedn. przed rabatem produktu (ręcznie)", min_value=0.0, value=0.0)
+                rabat = st.number_input("Rabat produktu (ręcznie)", min_value=0.0, value=0.0)
                 cena_jedn_po = max(0.0, cena_jedn_przed - rabat)
-                st.number_input("Cena jedn. po rabacie", value=cena_jedn_po, min_value=0.0, disabled=True)
+                st.number_input("Cena jedn. po rabacie produktu (ręcznie)", value=cena_jedn_po, min_value=0.0, disabled=True)
                 cena_laczna = max(0.0, cena_jedn_po * ilosc)
-                st.number_input("Cena łączna (po rabacie)", value=cena_laczna, min_value=0.0, disabled=True)
-                submit_manual = st.form_submit_button("Dodaj produkt")
+                st.number_input("Cena łączna produktu (po rabacie, ręcznie)", value=cena_laczna, min_value=0.0, disabled=True)
+                submit_manual = st.form_submit_button("Dodaj produkt ręcznie")
                 if submit_manual and nazwa:
                     manual_prod = {
                         "nazwa": nazwa,
@@ -307,10 +307,13 @@ def render_pending_receipts():
                 st.info(f"Zagregowano {len(st.session_state[key])} pozycji do {len(products_to_save)} unikalnych produktów.")
                 for prod in products_to_save:
                     try:
+                        log_event(f"[ZAPIS] Próbuję dodać produkt: {prod}")
+                        st.write(f"[ZAPIS] Próbuję dodać produkt: {prod}")
                         add_product(prod)
                         dodane += 1
                     except Exception as e:
-                        st.error(f"Błąd dodawania produktu: {str(e)}")
+                        log_event(f"[ZAPIS][BŁĄD] {str(e)} | Produkt: {prod}")
+                        st.error(f"Błąd dodawania produktu: {str(e)} | {prod}")
                 delete_pending_receipt(receipt_id)
                 st.success(f"Dodano {dodane} produktów z paragonu {nazwa_pliku}. Paragon został usunięty z oczekujących.")
                 st.rerun()
